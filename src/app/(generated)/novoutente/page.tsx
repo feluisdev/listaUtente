@@ -12,10 +12,10 @@ import { IGRPCard } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardHeader } from "@igrp/igrp-framework-react-design-system";
 import { IGRPHeadline } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardContent } from "@igrp/igrp-framework-react-design-system";
-import { IGRPInputText } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCombobox } from "@igrp/igrp-framework-react-design-system";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
-import { IGRPSelect } from "@igrp/igrp-framework-react-design-system";
+import { IGRPInputText } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDatePicker } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardFooter } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from "next/navigation";
 
@@ -24,7 +24,6 @@ export default function PageNovoutenteComponent() {
 
   const [contentFormform1, setContentFormform1] = useState<z.infer<any>>(null);
   const [selectcombobox1Options, setSelectcombobox1Options] = useState<IGRPOptionsProps[]>([]);
-  const [selectselect1Options, setSelectselect1Options] = useState<IGRPOptionsProps[]>([]);
   const formform1Ref = useRef<IGRPFormHandle<z.infer<anyZodType>> | null>(null);
   
 const router = useRouter()
@@ -97,17 +96,11 @@ formRef={ formform1Ref }
   
 >
   <div className={ cn('grid','grid-cols-4',' gap-4',)}   >
-	<IGRPInputText
-  name="inputText1"
-placeholder=""
-  label="Input Text"
-  className={ cn('col-span-1',) }
-  
-/>
-<IGRPCombobox
+	<IGRPCombobox
   name="combobox1"
   placeholder="Select an option..."
-  label="Combobox Input"
+  label="Tipo De Utente"
+  required = { true }
   selectLabel="No option found"
   gridSize="full"
   showSearch = { true }
@@ -116,14 +109,92 @@ placeholder=""
   value={ undefined }
 options={ selectcombobox1Options }
 />
-<IGRPSelect
-  name="select1"
-  placeholder="Select an option..."
-  label="Select Input"
+<IGRPInputText
+  name="inputText1"
+placeholder=""
+  label="Nome Completo"
+  required={ true }
   className={ cn('col-span-1',) }
   
-  value={ undefined }
-options={ selectselect1Options }
+/>
+<IGRPInputText
+  name="inputText2"
+placeholder=""
+  label="NIF"
+  required={ true }
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText3"
+placeholder=""
+  label="CNI"
+  required={ true }
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText8"
+placeholder=""
+  label="Nome da Mãe"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText9"
+placeholder=""
+  label="Nome do Pai"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPDatePicker
+  placeholder="Please select a date..."
+  name="inputDatePicker1"
+  label="Data de Nascimento"
+  startDate={ new Date("1900-01-01") }
+  endDate={ new Date("2099-12-31") }
+  gridSize="full"
+  dateFormat="dd/MM/yyyy"
+  dateFormat="dd/MM/yyyy"
+  today={ new Date("2025-01-01") }
+  defaultMonth={ new Date("2025-01-01") }
+  startMonth={ new Date("2025-01-01") }
+  month={ new Date("2025-01-01") }
+  endMonth={ new Date("2025-12-31") }
+  numberOfMonths={ 1 }
+  captionLayout="label"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText5"
+placeholder=""
+  label="Morada"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText6"
+placeholder=""
+  label="Telefone"
+  required={ true }
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText4"
+placeholder=""
+  label="Email"
+  required={ true }
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="inputText7"
+placeholder=""
+  label="Caixa Postal"
+  className={ cn('col-span-1',) }
+  
 /></div>
 </IGRPCardContent>
   <IGRPCardFooter

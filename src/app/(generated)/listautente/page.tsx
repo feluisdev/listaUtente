@@ -42,7 +42,7 @@ export default function PageListautenteComponent() {
   
 const router = useRouter()
 
-function onClicknovoUtente (): void {
+function goTonovoUtente (): void {
   router.push("novoutente");
 }
 
@@ -63,7 +63,7 @@ function onClicknovoUtente (): void {
   showIcon={ true }
   iconName="Plus"
   className={ cn() }
-  onClick={ () => onClicknovoUtente() }
+  onClick={ () => goTonovoUtente() }
 >
   Novo Utente
 </IGRPButton>
