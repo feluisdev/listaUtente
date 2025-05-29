@@ -1,0 +1,20 @@
+{
+  "RecentAppsDropdown": {
+    "RecentApps": "Aplicações recentes",
+    "NoRecentApps": "Nenhuma aplicação recente"
+  },
+
+  "ProfileDropdown": {
+      "Profile": "Perfil",
+      "Logout": "Sair"
+  },
+  "Sidebar": {
+    "Home": "Início",
+    "Settings": "Configurações",
+    "LogOut": "Sair",
+    "AccessManagement": "Gestão de Acesso",
+    "Users": "Usuários",
+    "Departments": "Departamentos",
+    "AppsManagement": "Gestão de Aplicações"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "RecentAppsDropdown": {
+    "RecentApps": "Recent Apps",
+    "NoRecentApps": "No recent apps"
+  },
+
+  "ProfileDropdown": {
+    "Profile": "Profile",
+    "Logout": "Logout"
+  }, 
+  
+  "Sidebar": {
+    "Home": "Home",
+    "Settings": "Settings",
+    "LogOut": "Log out",
+    "AccessManagement": "Access Management",
+    "Users": "Users",
+    "Departments": "Departments",
+    "AppsManagement": "Apps Management"
+  }
+}
