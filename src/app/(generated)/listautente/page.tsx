@@ -6,6 +6,7 @@ import { cn } from '@igrp/igrp-framework-react-design-system';
 import { IGRPPageHeader } from "@igrp/igrp-framework-react-design-system";
 import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
 import { IGRPStatsCard } from "@igrp/igrp-framework-react-design-system";
+import { IGRPInputSearch } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCombobox } from "@igrp/igrp-framework-react-design-system";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { IGRPInputText } from "@igrp/igrp-framework-react-design-system";
@@ -17,14 +18,16 @@ import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system
 import { IGRPDataTableDropdownMenu } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableDropdownMenuAlert } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFilterInput } from "@igrp/igrp-framework-react-design-system";
+import {fetchUtentes} from '@/app/(myapp)/functions/services/utente-service'
 import { useRouter } from "next/navigation";
+import {getStatusBadge} from '@/app/(myapp)/functions/services/utente-service'
 
 
 export default function PageListautenteComponent() {
 
   
   type Table1 = {
-    numUtente: string;
+    numeroUtente: string;
     tipoUtente: string;
     nomeUtente: string;
     nif: string;
@@ -35,12 +38,41 @@ export default function PageListautenteComponent() {
   const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
   const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
+  const [inputSearchinputSearch1Value, setInputSearchinputSearch1Value] = useState<string>(undefined);
   const [selectcombobox2Options, setSelectcombobox2Options] = useState<IGRPOptionsProps[]>([]);
   const [selectcombobox1Options, setSelectcombobox1Options] = useState<IGRPOptionsProps[]>([]);
   const [contentTabletable1, setContentTabletable1] = useState<any[]>([]);
   
   
 const router = useRouter()
+
+const [loading, setLoading] = useState(false)
+useEffect(() => {
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const { list, total, options } = await fetchUtentes(inputSearchinputSearch1Value); // toda a lógica está aqui
+      setContentTabletable1(list)
+
+      setSelectcombobox1Options(options)
+
+      setStatstatsCard2Value(total)
+
+
+
+      /*   setList(data.list);
+        setOptions(data.options);
+        setTotal(data.total);
+        setMessage(data.message); */
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadData();
+}, [inputSearchinputSearch1Value]);
 
 function goTonovoUtente (): void {
   router.push("novoutente");
@@ -121,7 +153,18 @@ function goTonovoUtente (): void {
 >
 </IGRPStatsCard></div>
 <div className={ cn(' border rounded-sm p-4',)}   >
-	<div className={ cn('grid','grid-cols-5','mb-2',' gap-4',)}   >
+	<IGRPInputSearch
+  name="inputSearch1"
+placeholder="Digite para pesquisar..."
+  showSubmitButton={ false }
+  startIcon="Search"
+  submitIcon="ArrowRight"
+  className={ cn('mb-3',) }
+  setValueChange={ setInputSearchinputSearch1Value
+ }
+  value={ inputSearchinputSearch1Value }
+/>
+<div className={ cn('grid','grid-cols-5','mb-2',' gap-4',)}   >
 	<IGRPCombobox
   name="combobox2"
   placeholder="Select an option..."
@@ -156,7 +199,7 @@ placeholder=""
   
 />
 <IGRPCombobox
-  name="combobox1"
+  name="comboEstado"
   placeholder="Select an option..."
   label="Estado"
   selectLabel="No option found"
@@ -186,9 +229,9 @@ options={ selectcombobox1Options }
     [
         {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title="Nº Utente" />)
-,accessorKey: 'numUtente',
+,accessorKey: 'numeroUtente',
           cell: ({ row }) => {
-          return row.getValue("numUtente")
+          return row.getValue("numeroUtente")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -222,11 +265,12 @@ options={ selectcombobox1Options }
           cell: ({ row }) => {
           const rowData = row.original;
 
+const { iconName, bgClass, textClass, label, className } = getStatusBadge(rowData);
 
 return <IGRPDataTableCellBadge
-  label={ row.original.estado }
-  variant="outline"
-className={ "" }
+  label={ label ?? row.original.estado }
+  variant="soft"
+className={ `${bgClass} ${textClass} ${className}` }
 >
 
 </IGRPDataTableCellBadge>

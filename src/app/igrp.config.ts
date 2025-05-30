@@ -44,6 +44,6 @@
 export default {
   types: [],
   actions: [],
-  functions: [],
+  functions: ['functions/services/utente-service'],
   components: []
 };
