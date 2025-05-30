@@ -22,9 +22,12 @@ function gerarNIF(tipo: string): string {
 
 const tiposUtente = ["Cidadão", "Camara", "Empresa"];
 
+const API_UTENTES_URL = "http://localhost:8082/utentes/v1"
+
+
 export async function GET(req: NextRequest) {
 
-    function generateFakeUtente(id: number) {
+    /*function generateFakeUtente(id: number) {
 
         const tipoUtente = tiposUtente[Math.floor(Math.random() * tiposUtente.length)];
 
@@ -43,5 +46,30 @@ export async function GET(req: NextRequest) {
         generateFakeUtente(i + 1)
     );
 
-    return NextResponse.json(fakeUtentes)
+    return NextResponse.json(fakeUtentes)*/
+
+    try {
+        const res = await fetch(API_UTENTES_URL)
+
+        if (!res.ok) {
+            throw new Error(`Erro chamada API: ${res.status}`)
+        }
+
+        const data = await res.json()
+
+        const utentes = data.content.map((item: any) => ({
+            id: item.id,
+            numeroUtente: item.nrUtente,
+            estado: item.estado,
+            tipoUtente: item.tipoUtente,
+            nomeUtente: item.nome,
+            nif: item.nif,
+        }))
+
+        return NextResponse.json(utentes)
+
+    } catch (error: any) {
+        console.error("Erro ao buscar utentes:", error)
+        return NextResponse.json({ error: "Erro ao buscar utentes" }, { status: 500 })
+    }
 }

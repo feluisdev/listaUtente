@@ -15,6 +15,7 @@ import { IGRPDataTable } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system";
+import { useRouter } from "next/navigation";
 
 
 export default function PageDetalhesutenteComponent() {
@@ -22,6 +23,12 @@ export default function PageDetalhesutenteComponent() {
   const [contentTabletable1, setContentTabletable1] = useState<any[]>([]);
   
   
+const router = useRouter()
+
+function goTolistaUtente (): void {
+  router.push("listautente");
+}
+
 
   return (
 <div className={ cn('page','mx-auto px-4 space-y-6',)}   >
@@ -38,7 +45,7 @@ export default function PageDetalhesutenteComponent() {
   showIcon={ true }
   iconName="X"
   className={ cn() }
-  
+  onClick={ () => goTolistaUtente() }
 >
   Fechar
 </IGRPButton>

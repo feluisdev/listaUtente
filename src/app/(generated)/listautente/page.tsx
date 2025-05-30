@@ -15,8 +15,7 @@ import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableCellBadge } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system";
-import { IGRPDataTableDropdownMenu } from "@igrp/igrp-framework-react-design-system";
-import { IGRPDataTableDropdownMenuAlert } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDataTableButtonModal } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFilterInput } from "@igrp/igrp-framework-react-design-system";
 import {fetchUtentes} from '@/app/(myapp)/functions/services/utente-service'
 import { useRouter } from "next/navigation";
@@ -76,6 +75,14 @@ useEffect(() => {
 
 function goTonovoUtente (): void {
   router.push("novoutente");
+}
+
+function goTonovoUtente (): void {
+  router.push("novoutente");
+}
+
+function goTodetalhesUtente (): void {
+  router.push("detalhesutente");
 }
 
 
@@ -285,18 +292,28 @@ className={ `${bgClass} ${textClass} ${className}` }
 
 return (
 <IGRPDataTableRowAction>
-  <IGRPDataTableDropdownMenu
-  items={
-    [
-      {
-        component: IGRPDataTableDropdownMenuAlert,
-        props: {
-          title: "New Alert",labelTrigger: "Alert",variant: "default",showIcon: true,showCancel: true,labelCancel: "Cancel",variantCancel: "default",showConfirm: true,labelConfirm: "Confirm",variantConfirm: "default",}
-      },
-]
-  }
+  <IGRPDataTableButtonModal
+  labelTrigger="Editar"
+  variant="default"
+  icon="Pencil"
+  variantCancel="default"
+  variantConfirm="default"
+  modalTitle="Editar"
+  className={ cn() }
+  onClickConfirm={ () => goTonovoUtente() }
 >
-</IGRPDataTableDropdownMenu>
+</IGRPDataTableButtonModal>
+  <IGRPDataTableButtonModal
+  labelTrigger="Detalhes"
+  variant="default"
+  icon="BookOpen"
+  variantCancel="default"
+  variantConfirm="default"
+  modalTitle="Detalhes"
+  className={ cn() }
+  onClickConfirm={ () => goTodetalhesUtente() }
+>
+</IGRPDataTableButtonModal>
 </IGRPDataTableRowAction>
 );
           },
