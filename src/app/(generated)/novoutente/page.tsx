@@ -19,11 +19,44 @@ import { IGRPDatePicker } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardFooter } from "@igrp/igrp-framework-react-design-system";
 import {getTipoUtente} from '@/app/(myapp)/functions/services/utente-service'
 import { useRouter } from "next/navigation";
+import {createUtente} from '@/app/(myapp)/functions/services/utente-service'
 
 
 export default function PageNovoutenteComponent() {
 
-  const [contentFormform1, setContentFormform1] = useState<z.infer<any>>(null);
+  
+  const form1 = z.object({
+    tipoUtente: z.string().optional(),
+    nome: z.string().optional(),
+    nif: z.string().optional(),
+    bi: z.string().optional(),
+    nome_mae: z.string().optional(),
+    nomePai: z.string().optional(),
+    dataNascimento: z.date().optional(),
+    morada: z.string().optional(),
+    telefone: z.string().optional(),
+    email: z.string().optional(),
+    inputText7: z.string().optional()
+})
+
+type Form1ZodType = typeof form1;
+
+const initForm1: z.infer<Form1ZodType> = {
+    tipoUtente: "",
+    nome: "",
+    nif: "",
+    bi: "",
+    nome_mae: "",
+    nomePai: "",
+    dataNascimento: undefined,
+    morada: "",
+    telefone: "",
+    email: "",
+    inputText7: ""
+}
+
+
+  const [contentFormform1, setContentFormform1] = useState<z.infer<any>>(initForm1);
   const [selectcombobox1Options, setSelectcombobox1Options] = useState<IGRPOptionsProps[]>([]);
   const formform1Ref = useRef<IGRPFormHandle<z.infer<anyZodType>> | null>(null);
   
@@ -77,11 +110,12 @@ function onClicklistaUtente (): void {
 </IGRPPageHeader>
 
 <IGRPForm
+  schema={ form1 }
   validationMode="onBlur"
   gridClassName="flex flex-col"
 formRef={ formform1Ref }
   className={ cn() }
-  
+  onSubmit={ createUtente }
   defaultValues={ contentFormform1 }
 >
   <>
@@ -107,7 +141,7 @@ formRef={ formform1Ref }
 >
   <div className={ cn('grid','grid-cols-4',' gap-4',)}   >
 	<IGRPCombobox
-  name="combobox1"
+  name="tipoUtente"
   placeholder="Select an option..."
   label="Tipo De Utente"
   required = { true }
@@ -120,7 +154,7 @@ formRef={ formform1Ref }
 options={ selectcombobox1Options }
 />
 <IGRPInputText
-  name="inputText1"
+  name="nome"
 placeholder=""
   label="Nome Completo"
   required={ true }
@@ -128,7 +162,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText2"
+  name="nif"
 placeholder=""
   label="NIF"
   required={ true }
@@ -136,7 +170,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText3"
+  name="bi"
 placeholder=""
   label="CNI"
   required={ true }
@@ -144,14 +178,14 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText8"
+  name="nome_mae"
 placeholder=""
   label="Nome da Mãe"
   className={ cn('col-span-1',) }
   
 />
 <IGRPInputText
-  name="inputText9"
+  name="nomePai"
 placeholder=""
   label="Nome do Pai"
   className={ cn('col-span-1',) }
@@ -159,7 +193,7 @@ placeholder=""
 />
 <IGRPDatePicker
   placeholder="Please select a date..."
-  name="inputDatePicker1"
+  name="dataNascimento"
   label="Data de Nascimento"
   startDate={ new Date("1900-01-01") }
   endDate={ new Date("2099-12-31") }
@@ -177,14 +211,14 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText5"
+  name="morada"
 placeholder=""
   label="Morada"
   className={ cn('col-span-1',) }
   
 />
 <IGRPInputText
-  name="inputText6"
+  name="telefone"
 placeholder=""
   label="Telefone"
   required={ true }
@@ -192,7 +226,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText4"
+  name="email"
 placeholder=""
   label="Email"
   required={ true }

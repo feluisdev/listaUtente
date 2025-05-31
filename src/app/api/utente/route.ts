@@ -66,3 +66,24 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(fakeUtentes);
     }
 }
+
+// POST: cria novo utente
+export async function POST(req: NextRequest) {
+
+    const data = await req.json();
+
+    console.log('data:: ', data)
+    const res = await fetch(API_UTENTES_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+
+    console.log('res:: ', res)
+    const newUtente = await res.json();
+
+    console.log('newUtente:: ', newUtente)
+
+    return NextResponse.json(newUtente, { status: 201 });
+}
