@@ -18,6 +18,7 @@ import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system
 import { IGRPDataTableButtonModal } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFilterInput } from "@igrp/igrp-framework-react-design-system";
 import {fetchUtentes} from '@/app/(myapp)/functions/services/utente-service'
+import {getTipoUtente} from '@/app/(myapp)/functions/services/utente-service'
 import { useRouter } from "next/navigation";
 import {getStatusBadge} from '@/app/(myapp)/functions/services/utente-service'
 
@@ -57,6 +58,8 @@ useEffect(() => {
 
       setStatstatsCard2Value(total)
 
+      setSelectcombobox2Options(getTipoUtente)
+
 
 
       /*   setList(data.list);
@@ -78,11 +81,11 @@ function goTonovoUtente (): void {
 }
 
 function goTonovoUtente (): void {
-  router.push("novoutente");
+  router.push("novoutente?id=id");
 }
 
 function goTodetalhesUtente (): void {
-  router.push("detalhesutente");
+  router.push("detalhesutente?id=id");
 }
 
 
@@ -296,8 +299,10 @@ return (
   labelTrigger="Editar"
   variant="default"
   icon="Pencil"
-  variantCancel="default"
   variantConfirm="default"
+  labelCancel="teste cancel"
+  showCancel={ true }
+  showConfirm={ true }
   modalTitle="Editar"
   className={ cn() }
   onClickConfirm={ () => goTonovoUtente() }

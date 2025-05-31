@@ -17,6 +17,7 @@ import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { IGRPInputText } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDatePicker } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardFooter } from "@igrp/igrp-framework-react-design-system";
+import {getTipoUtente} from '@/app/(myapp)/functions/services/utente-service'
 import { useRouter } from "next/navigation";
 
 
@@ -27,6 +28,15 @@ export default function PageNovoutenteComponent() {
   const formform1Ref = useRef<IGRPFormHandle<z.infer<anyZodType>> | null>(null);
   
 const router = useRouter()
+
+useEffect(() => {
+  const loadFormData = () => {
+    const options = getTipoUtente();
+    setSelectcombobox1Options(options);
+  };
+  loadFormData();
+}, []);
+
 
 function onClicklistaUtente (): void {
   router.push("listautente");
@@ -58,7 +68,7 @@ function onClicklistaUtente (): void {
   showIcon={ true }
   iconName="Save"
   className={ cn() }
-  
+  onClick={ () => formform1Ref.current?.submit() }
 >
   Gravar
 </IGRPButton>

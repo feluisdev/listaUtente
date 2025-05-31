@@ -14,7 +14,6 @@ export async function fetchUtentes(search = '') {
     return {
         list: filtered,
         options: [{ label: 'Ativo', value: 'A' }, { label: 'Inativo', value: 'I' }],
-        optionsTipoUtente: [{ label: 'Cidadão', value: 'CI' }, { label: 'Camara', value: 'C' }, { label: 'Empresa', value: 'E' }],
         total: filtered.length,
         message:
             filtered.length > 0 ? 'Dados carregados com sucesso' : 'Nenhum utente encontrado',
@@ -36,4 +35,15 @@ export function getStatusBadge(utente?: any): {
 
     const label = utente.estado;
     return { label, bgClass };
+}
+
+export function getTipoUtente() {
+
+    const tiposUtente = [
+        { label: 'Cidadão', value: 'CI' },
+        { label: 'Camara', value: 'C' },
+        { label: 'Empresa', value: 'E' }]
+
+    return tiposUtente;
+
 }
