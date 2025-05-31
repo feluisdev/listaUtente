@@ -16,6 +16,7 @@ import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDat
 import { IGRPDataTableCellBadge } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableButtonModal } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDataTableButtonAlert } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFilterInput } from "@igrp/igrp-framework-react-design-system";
 import {fetchUtentes} from '@/app/(myapp)/functions/services/utente-service'
 import {getTipoUtente} from '@/app/(myapp)/functions/services/utente-service'
@@ -152,7 +153,7 @@ function goTodetalhesUtente (): void {
 </IGRPStatsCard>
 <IGRPStatsCard
   variant="success"
-  title="Utentes"
+  title="Servidor Público"
   border={ true }
   borderPosition="top"
   showIcon={ true }
@@ -317,6 +318,36 @@ return (
   modalTitle="Detalhes"
   className={ cn() }
   onClickConfirm={ () => goTodetalhesUtente() }
+>
+</IGRPDataTableButtonModal>
+  <IGRPDataTableButtonAlert
+  modalTitle="Inativar"
+labelTrigger="Delete"
+  variant="default"
+  icon="ArrowRight"
+  variantCancel="default"
+  variantConfirm="default"
+  labelCancel="Cancel"
+  labelConfirm="Confirm"
+  showCancel={ true }
+  showConfirm={ true }
+  className={ cn() }
+  
+>
+</IGRPDataTableButtonAlert>
+  <IGRPDataTableButtonModal
+  labelTrigger="Dividas"
+  variant="default"
+  icon="ArrowRight"
+  variantCancel="default"
+  variantConfirm="default"
+  labelCancel="Cancel"
+  labelConfirm="Confirm"
+  showCancel={ true }
+  showConfirm={ true }
+  modalTitle="Dívidas"
+  className={ cn('block','','overflow-visible',) }
+  
 >
 </IGRPDataTableButtonModal>
 </IGRPDataTableRowAction>
