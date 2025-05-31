@@ -14,7 +14,7 @@ export async function fetchUtentes(search = '') {
     return {
         list: filtered,
         options: [{ label: 'Ativo', value: 'A' }, { label: 'Inativo', value: 'I' }],
-        optionsTipoUtente: [{ label: 'Cidadão', value: 'CI' }, { label: 'Camara', value: 'C' }, { label: 'Empresa', value: 'E' }],
+        optionsTipoUtente: [{ label: 'Cidadão', value: 'CI' }, { label: 'Servidor Publico', value: 'SP' }, { label: 'Empresa', value: 'E' }],
         total: filtered.length,
         message:
             filtered.length > 0 ? 'Dados carregados com sucesso' : 'Nenhum utente encontrado',
@@ -30,7 +30,7 @@ export function getStatusBadge(utente?: any): {
 } {
     if (!utente) return {};
     const bgClass =
-        utente.estado === 'Ativo'
+        utente.estado === 'ATIVO'
             ? 'bg-green-100 text-green-800 hover:bg-green-100'
             : 'bg-red-100 text-red-800 hover:bg-red-100';
 
