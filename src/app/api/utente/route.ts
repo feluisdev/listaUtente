@@ -14,7 +14,8 @@ const nomesUtente = [
 ];
 
 const tiposUtente = ["Cidadão", "Camara", "Empresa"];
-const API_UTENTES_URL = "http://localhost:8082/utentes/v1";
+
+const API_UTENTES_URL = process.env.NEXT_PUBLIC_API_URL_UTENTE + '/utentes/v1';
 
 function gerarNIF(tipo: string): string {
     const prefixo = tipo === "Cidadão" ? "1" : "2";
