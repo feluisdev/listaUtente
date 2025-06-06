@@ -13,21 +13,24 @@ import { IGRPInputText } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTable } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
+import { IGRPInputHidden } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableCellBadge } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableButtonModal } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableButtonAlert } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFilterInput } from "@igrp/igrp-framework-react-design-system";
 import {fetchUtentes} from '@/app/(myapp)/functions/services/utente-service'
-import {getTipoUtente} from '@/app/(myapp)/functions/services/utente-service'
+import {getEstado, getTipoUtente} from '@/app/(myapp)/functions/services/config-service'
 import { useRouter } from "next/navigation";
-import {getStatusBadge} from '@/app/(myapp)/functions/services/utente-service'
+import {getStatusBadge} from '@/app/(myapp)/functions/services/config-service'
+import {deleteUtente} from '@/app/(myapp)/functions/services/utente-service'
 
 
 export default function PageListautenteComponent() {
 
   
   type Table1 = {
+    id: string;
     numeroUtente: string;
     tipoUtente: string;
     nomeUtente: string;
@@ -49,44 +52,54 @@ const router = useRouter()
 
 const [loading, setLoading] = useState(false)
 useEffect(() => {
-  const loadData = async () => {
-    setLoading(true);
+  let isMounted = true; // flag de controle
+
+  const loadData = async () => {    
+
+    setLoading(true);      
+    
+    setSelectcombobox1Options(getEstado);
+    setSelectcombobox2Options(getTipoUtente);
     try {
-      const { list, total, options } = await fetchUtentes(inputSearchinputSearch1Value); // toda a lógica está aqui
-      setContentTabletable1(list)
+      const { list, total, options,totalCamara,totalCidadao,totalEmpresa } = await fetchUtentes(inputSearchinputSearch1Value); // toda a lógica está aqui
 
-      setSelectcombobox1Options(options)
+      if (isMounted){
+        setContentTabletable1(list);   
 
-      setStatstatsCard2Value(total)
+        setStatstatsCard2Value(total);
+        setStatstatsCard1Value(totalCamara);
+        setStatstatsCard3Value(totalEmpresa);
+        setStatstatsCard4Value(totalCidadao);    
 
-      setSelectcombobox2Options(getTipoUtente)
-
-
-
-      /*   setList(data.list);
-        setOptions(data.options);
-        setTotal(data.total);
-        setMessage(data.message); */
-    } catch (e) {
-      console.log(e)
+        /*   setList(data.list);
+          setOptions(data.options);
+          setTotal(data.total);
+          setMessage(data.message); */
+      }
+    }  catch (e) {
+      if (isMounted) console.error(e);
     } finally {
-      setLoading(false);
+      if (isMounted) setLoading(false);
     }
   };
 
   loadData();
+
+  return () => {
+    isMounted = false; // cleanup quando o componente for desmontado
+  };
 }, [inputSearchinputSearch1Value]);
 
 function goTonovoUtente (): void {
   router.push("novoutente");
 }
 
-function goTonovoUtente (): void {
-  router.push("novoutente?id=id");
+function goToeditarUtente (id: string): void {
+  router.push("novoutente?id="+id);
 }
 
-function goTodetalhesUtente (): void {
-  router.push("detalhesutente?id=id");
+function goTodetalhesUtente (id: string): void {
+  router.push("detalhesutente?id="+id);
 }
 
 
@@ -239,6 +252,13 @@ options={ selectcombobox1Options }
   columns={
     [
         {
+          id: 'id',
+          cell: ({ row }) => {
+          <span className="bg-red-600 text-yellow-300 px-2 py-1 rounded">Unsupported Component</span>
+          },
+        filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title="Nº Utente" />)
 ,accessorKey: 'numeroUtente',
           cell: ({ row }) => {
@@ -300,13 +320,11 @@ return (
   labelTrigger="Editar"
   variant="default"
   icon="Pencil"
+  variantCancel="default"
   variantConfirm="default"
-  labelCancel="teste cancel"
-  showCancel={ true }
-  showConfirm={ true }
   modalTitle="Editar"
   className={ cn() }
-  onClickConfirm={ () => goTonovoUtente() }
+  onClickConfirm={ () => goToeditarUtente(rowData.id) }
 >
 </IGRPDataTableButtonModal>
   <IGRPDataTableButtonModal
@@ -317,7 +335,7 @@ return (
   variantConfirm="default"
   modalTitle="Detalhes"
   className={ cn() }
-  onClickConfirm={ () => goTodetalhesUtente() }
+  onClickConfirm={ () => goTodetalhesUtente(rowData.id) }
 >
 </IGRPDataTableButtonModal>
   <IGRPDataTableButtonAlert
@@ -331,25 +349,10 @@ labelTrigger="Delete"
   labelConfirm="Confirm"
   showCancel={ true }
   showConfirm={ true }
-  className={ cn() }
-  
+  className={ cn('block','',) }
+  onClickConfirm={ deleteUtente }
 >
 </IGRPDataTableButtonAlert>
-  <IGRPDataTableButtonModal
-  labelTrigger="Dividas"
-  variant="default"
-  icon="ArrowRight"
-  variantCancel="default"
-  variantConfirm="default"
-  labelCancel="Cancel"
-  labelConfirm="Confirm"
-  showCancel={ true }
-  showConfirm={ true }
-  modalTitle="Dívidas"
-  className={ cn('block','','overflow-visible',) }
-  
->
-</IGRPDataTableButtonModal>
 </IGRPDataTableRowAction>
 );
           },
@@ -360,7 +363,7 @@ labelTrigger="Delete"
   clientFilters={
     [
         {
-          columnId: "numUtente",
+          columnId: "id",
           component: (column) => (
           <IGRPDataTableFilterInput column={column} />
           )
