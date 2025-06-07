@@ -350,7 +350,8 @@ labelTrigger="Delete"
   showCancel={ true }
   showConfirm={ true }
   className={ cn('block','',) }
-  onClickConfirm={ deleteUtente }
+  onClickConfirm={ () => deleteUtente(rowData.id) }
+  data-slot
 >
 </IGRPDataTableButtonAlert>
 </IGRPDataTableRowAction>

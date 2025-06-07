@@ -3,6 +3,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@igrp/igrp-framework-react-design-system';
+import { IGRPForm } from "@igrp/igrp-framework-react-design-system";
+import { IGRPFormHandle } from "@igrp/igrp-framework-react-design-system";
+import { z } from "zod";
 import { IGRPPageHeader } from "@igrp/igrp-framework-react-design-system";
 import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCard } from "@igrp/igrp-framework-react-design-system";
@@ -14,16 +17,61 @@ import { IGRPCardFooter } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTable } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
-import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from "next/navigation";
 
 
 export default function PageDetalhesutenteComponent() {
 
+  const [contentFormform1, setContentFormform1] = useState<z.infer<any>>(null);
   const [contentTabletable1, setContentTabletable1] = useState<any[]>([]);
-  
+  const formform1Ref = useRef<IGRPFormHandle<z.infer<anyZodType>> | null>(null);
   
 const router = useRouter()
+
+
+// Lógica para carregar os dados do utente pelo ID e preencher o formulário
+useEffect(() => {
+  // Função para extrair o ID do utente da URL
+  const getUtenteIdFromUrl = () => {
+    // Verifica se estamos no navegador
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      return id ? parseInt(id, 10) : null;
+    }
+    return null;
+  };
+
+  // Função para carregar os dados do utente
+  const loadUtenteData = async () => {
+    const utenteId = getUtenteIdFromUrl();
+    
+    if (utenteId) {
+      try {
+        // Importação dinâmica para evitar problemas de SSR
+        const { fetchUtenteById, formatUtenteDataForForm } = await import('../../(myapp)/functions/services/utente-service');
+        
+        // Buscar dados do utente
+        const utenteData = await fetchUtenteById(utenteId);
+        
+        // Formatar dados para o formulário
+        const formattedData = formatUtenteDataForForm(utenteData);
+        
+        // Atualizar o estado do formulário
+        setContentFormform1(formattedData);
+        
+        // TODO: Carregar serviços associados ao utente (se necessário)
+        // setContentTabletable1([...]);
+      } catch (error) {
+        console.error('Erro ao carregar dados do utente:', error);
+        // Aqui poderia mostrar uma mensagem de erro para o usuário
+      }
+    }
+  };
+
+  // Carregar dados quando o componente for montado
+  loadUtenteData();
+}, []);
 
 function goTolistaUtente (): void {
   router.push("listautente");
@@ -33,7 +81,16 @@ function goTolistaUtente (): void {
   return (
 <div className={ cn('page','mx-auto px-4 space-y-6',)}   >
 	<div className={ cn('section',' space-x-3 space-y-3',)}   >
-	<IGRPPageHeader
+	<IGRPForm
+  validationMode="onBlur"
+  gridClassName="flex flex-col"
+formRef={ formform1Ref }
+  className={ cn() }
+  onSubmit={ (e) => {} }
+  defaultValues={ contentFormform1 }
+>
+  <>
+  <IGRPPageHeader
   title="Detalhes do Utente"
   variant="h3"
   className={ cn() }
@@ -53,7 +110,8 @@ function goTolistaUtente (): void {
 </div>
 </IGRPPageHeader>
 
-<div className={ cn('grid','grid-cols-12',' gap-4',)}   >
+  <div className={ cn('grid','grid-cols-1',' gap-4',)}   >
+	<div className={ cn('grid','grid-cols-12',' gap-4',)}   >
 	<div className={ cn('col-span-8 flex flex-col gap-6',)}   >
 	<IGRPCard
   className={ cn() }
@@ -77,7 +135,7 @@ function goTolistaUtente (): void {
 >
   <div className={ cn('grid','grid-cols-2','grid grid grid-rows-1 gap-2 justify-items-start items-start',' gap-4',)}   >
 	<IGRPInputText
-  name="inputText5"
+  name="nome"
 placeholder=""
   disabled
   label="Nome"
@@ -85,7 +143,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText1"
+  name="nif"
 placeholder=""
   disabled
   label="NIF"
@@ -93,7 +151,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText4"
+  name="bi"
 placeholder=""
   disabled
   label="CNI"
@@ -101,7 +159,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText3"
+  name="estado"
 placeholder=""
   disabled
   label="Estado"
@@ -109,7 +167,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText2"
+  name="nomeMae"
 placeholder=""
   disabled
   label="Nome da Mãe"
@@ -117,7 +175,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText9"
+  name="nomePai"
 placeholder=""
   disabled
   label="Nome do Pai"
@@ -125,7 +183,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="inputText10"
+  name="dataNascimento"
 placeholder=""
   disabled
   label="Data de Nascimento"
@@ -148,6 +206,13 @@ placeholder=""
   className={ cn() }
   
 >
+  <IGRPHeadline
+  title="Contatos"
+  variant="h5"
+  className={ cn() }
+>
+</IGRPHeadline>
+
 </IGRPCardHeader>
   <IGRPCardContent
   className={ cn('space-x-3','space-y-3','block',) }
@@ -155,7 +220,7 @@ placeholder=""
 >
   <div className={ cn('grid','grid-cols-1',' gap-4',)}   >
 	<IGRPInputText
-  name="inputText6"
+  name="email"
 placeholder=""
   disabled
   label="Email"
@@ -163,14 +228,14 @@ placeholder=""
   
 /></div>
   <IGRPInputText
-  name="inputText7"
+  name="telefone"
 placeholder=""
   label="Telefone"
   className={ cn() }
   
 />
   <IGRPInputText
-  name="inputText8"
+  name="modara"
 placeholder=""
   disabled
   label="Morada"
@@ -178,7 +243,7 @@ placeholder=""
   
 />
   <IGRPInputText
-  name="inputText11"
+  name="cxPostal"
 placeholder=""
   disabled
   label="Caixa Postal"
@@ -191,7 +256,9 @@ placeholder=""
   
 >
 </IGRPCardFooter>
-</IGRPCard></div></div>
+</IGRPCard></div></div></div>
+</>
+</IGRPForm>
 <IGRPHeadline
   title="Serviços Associados"
   variant="h4"
@@ -205,62 +272,49 @@ placeholder=""
     [
         {
           header: 'Tipo'
-,accessorKey: 'tableTextCell1',
+,accessorKey: 'tipoServico',
           cell: ({ row }) => {
-          return row.getValue("tableTextCell1")
+          return row.getValue("tipoServico")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
         {
           header: 'Descrição'
-,accessorKey: 'tableTextCell2',
+,accessorKey: 'descricaoServico',
           cell: ({ row }) => {
-          return row.getValue("tableTextCell2")
+          return row.getValue("descricaoServico")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
         {
           header: 'Referência'
-,accessorKey: 'tableTextCell3',
+,accessorKey: 'referencia',
           cell: ({ row }) => {
-          return row.getValue("tableTextCell3")
+          return row.getValue("referencia")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
         {
           header: 'Data Inicio'
-,accessorKey: 'tableTextCell4',
+,accessorKey: 'dataInicio',
           cell: ({ row }) => {
-          return row.getValue("tableTextCell4")
+          return row.getValue("dataInicio")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
         {
           header: 'Data Fim'
-,accessorKey: 'tableTextCell5',
+,accessorKey: 'dataFim',
           cell: ({ row }) => {
-          return row.getValue("tableTextCell5")
+          return row.getValue("dataFim")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
         {
           header: 'Estado'
-,accessorKey: 'tableTextCell7',
+,accessorKey: 'estadoServico',
           cell: ({ row }) => {
-          return row.getValue("tableTextCell7")
-          },
-        filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Ações'
-,accessorKey: 'tableActionListCell1',
-          enableHiding: false,cell: ({ row }) => {
-          const rowData = row.original;
-
-return (
-<IGRPDataTableRowAction>
-</IGRPDataTableRowAction>
-);
+          return row.getValue("estadoServico")
           },
         filterFn: IGRPDataTableFacetedFilterFn
         },
