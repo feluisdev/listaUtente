@@ -1,4 +1,46 @@
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { z } from "zod";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+
+// Esquema de validação para o formulário de utente
+export const utenteFormSchema = z.object({
+    id: z.number().optional(),
+    tipoUtente: z.string().optional(),
+    nome: z.string().optional(),
+    nrUtente: z.string().optional(),
+    nif: z.string().optional(),
+    bi: z.string().optional(),
+    nomeMae: z.string().optional(),
+    nomePai: z.string().optional(),
+    dataNascimento: z.date().optional(),
+    estado: z.string().optional(),
+    morada: z.string().optional(),
+    telefone: z.string().optional(),
+    email: z.string().optional(),
+    cxPostal: z.string().optional()
+  });
+  
+  // Tipo derivado do esquema
+  export type UtenteFormType = typeof utenteFormSchema;
+  export type UtenteFormData = z.infer<UtenteFormType>;
+  
+  // Valores iniciais para o formulário
+  export const initialUtenteForm: UtenteFormData = {
+    id: undefined,
+    tipoUtente: "",
+    nome: "",
+    nrUtente: "",
+    nif: "",
+    bi: "",
+    nomeMae: "",
+    nomePai: "",
+    dataNascimento: undefined,
+    estado: "ATIVO",
+    morada: "",
+    telefone: "",
+    email: "",
+    cxPostal: ""
+  };
 
 export async function fetchUtentes(params: {
     search?: string;
@@ -160,4 +202,97 @@ export async function deleteUtente(id: number) {
     }
 }
 
+
+
+// Função para formatar dados do utente para o formulário
+export function formatUtenteDataForForm(utenteData: any): UtenteFormData {
+    const formattedData = { ...utenteData };
+    
+    // Converter a data de nascimento para objeto Date se existir
+    if (formattedData.dataNascimento) {
+      formattedData.dataNascimento = new Date(formattedData.dataNascimento);
+    }
+  
+    // Mapear campos do backend para o formulário
+    if (formattedData.nomeUtente && !formattedData.nome) {
+      formattedData.nome = formattedData.nomeUtente;
+    }
+  
+    // Garantir que todos os campos estejam mapeados corretamente
+    if (formattedData.nome_mae && !formattedData.nomeMae) {
+      formattedData.nomeMae = formattedData.nome_mae;
+    }
+  
+    if (!formattedData.estado) {
+      formattedData.estado = 'ATIVO';
+    }
+    
+    return formattedData as UtenteFormData;
+  }
+  
+  // Função para preparar dados para criação de utente
+  export function prepareCreateUtenteData(data: UtenteFormData) {
+    return {
+      nome: data.nome,
+      tipoUtente: data.tipoUtente,
+      nrUtente: data.nrUtente,
+      nif: data.nif,
+      bi: data.bi,
+      nomeMae: data.nomeMae,
+      nomePai: data.nomePai,
+      dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
+      estado: data.estado,
+      morada: data.morada,
+      telefone: data.telefone,
+      email: data.email,
+      cxPostal: data.cxPostal
+    };
+  }
+  
+  // Função para preparar dados para atualização de utente
+  export function prepareUpdateUtenteData(data: UtenteFormData) {
+    return {
+      nome: data.nome,
+      morada: data.morada,
+      telefone: data.telefone,
+      email: data.email,
+      cxPostal: data.cxPostal,
+      nomeMae: data.nomeMae,
+      nomePai: data.nomePai,
+      nif: data.nif,
+      bi: data.bi,
+      tipoUtente: data.tipoUtente
+    };
+  }
+
+  
+
+
+// Função para processar a submissão do formulário de utente
+export async function handleUtenteSubmit(data: UtenteFormData, id?: string | null) {
+  console.log('[LOG] Dados do formulário para envio:', data);
+
+  try {
+    if (id) {
+      // Modo edição
+      // Usar a função de preparação de dados do serviço
+      const updateData = prepareUpdateUtenteData(data);
+
+      console.log('[LOG] Dados formatados para API (update):', updateData);
+      return updateUtente(Number(id), updateData);
+    } else {
+      // Modo criação
+      // Usar a função de preparação de dados do serviço
+      const createData = prepareCreateUtenteData(data);
+
+      console.log('[LOG] Dados formatados para API (create):', createData);
+      return createUtente(createData);
+    }
+  } catch (error) {
+    console.error('[LOG] Erro ao processar submissão:', error);
+    throw error;
+  }
+}
+
+  
 
