@@ -79,8 +79,10 @@ export default function PageNovoutenteComponent() {
         const options = getTipoUtente();
         setSelectcombobox1Options(options);
 
+
         // Verificar se existe um ID na URL (modo edição)
         const id = searchParams.get('id');
+        
         if (id) {
           console.log(`[LOG-PAGE] Tentando carregar utente ID: ${id}`);
           try {
