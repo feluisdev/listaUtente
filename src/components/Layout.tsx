@@ -3,7 +3,7 @@
 import {
   IGRPSidebarInset,
   IGRPSidebarProvider,
-  IGRPHeader,
+  IGRPPageHeader,
   IGRPSidebar,
   IGRPSidebarContent,
   IGRPSidebarHeader,

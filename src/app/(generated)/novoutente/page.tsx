@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { cn } from '@igrp/igrp-framework-react-design-system';
 import { IGRPPageHeader } from "@igrp/igrp-framework-react-design-system";
 import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
@@ -19,12 +19,20 @@ import { IGRPDatePicker } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardFooter } from "@igrp/igrp-framework-react-design-system";
 import { utenteFormSchema,initialUtenteForm, UtenteFormData} from '@/app/(myapp)/functions/services/utente-service'
 import {getTipoUtente} from '@/app/(myapp)/functions/services/config-service'
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {createUtente} from '@/app/(myapp)/functions/services/utente-service'
+import { anyZodType } from "@/app/types/zod-types";
 
 
 export default function PageNovoutenteComponent() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NovoUtenteContent />
+    </Suspense>
+  );
+}
 
+function NovoUtenteContent() {
   
   const form1 = z.object({
     tipoUtente: z.string().optional(),
@@ -264,6 +272,7 @@ placeholder=""
   
 />
 <IGRPDatePicker
+  id="dataNascimento"
   placeholder="Please select a date..."
   name="dataNascimento"
   label="Data de Nascimento"

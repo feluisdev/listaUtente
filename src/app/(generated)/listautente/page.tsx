@@ -42,7 +42,7 @@ export default function PageListautenteComponent() {
   const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
   const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
-  const [inputSearchinputSearch1Value, setInputSearchinputSearch1Value] = useState<string>(undefined);
+  const [inputSearchinputSearch1Value, setInputSearchinputSearch1Value] = useState<string>("");
   const [selectcombobox2Options, setSelectcombobox2Options] = useState<IGRPOptionsProps[]>([]);
   const [selectcombobox1Options, setSelectcombobox1Options] = useState<IGRPOptionsProps[]>([]);
   const [contentTabletable1, setContentTabletable1] = useState<any[]>([]);
@@ -61,7 +61,7 @@ useEffect(() => {
     setSelectcombobox1Options(getEstado);
     setSelectcombobox2Options(getTipoUtente);
     try {
-      const { list, total, options,totalCamara,totalCidadao,totalEmpresa } = await fetchUtentes(inputSearchinputSearch1Value); // toda a lógica está aqui
+      const { list, total, options,totalCamara,totalCidadao,totalEmpresa } = await fetchUtentes( {}, inputSearchinputSearch1Value); // toda a lógica está aqui
 
       if (isMounted){
         setContentTabletable1(list);   
@@ -350,7 +350,7 @@ labelTrigger="Delete"
   showCancel={ true }
   showConfirm={ true }
   className={ cn('block','',) }
-  onClickConfirm={ () => deleteUtente(rowData.id) }
+  onClickConfirm={ () => deleteUtente(Number(rowData.id)) }
   data-slot
 >
 </IGRPDataTableButtonAlert>

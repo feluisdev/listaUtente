@@ -43,14 +43,14 @@ export const utenteFormSchema = z.object({
   };
 
 export async function fetchUtentes(params: {
-    search?: string;
-    tipo?: string;
-    numeroUtente?: string;
-    nome?: string;
-    nif?: string;
-    documento?: string;
-    estado?: string;
-} = {}) {
+  search?: string;
+  tipo?: string;
+  numeroUtente?: string;
+  nome?: string;
+  nif?: string;
+  documento?: string;
+  estado?: string;
+} = {}, inputSearchinputSearch1Value: string) {
     // Construir URL com parâmetros de busca
     let url = '/api/utente';
     const queryParams = [];

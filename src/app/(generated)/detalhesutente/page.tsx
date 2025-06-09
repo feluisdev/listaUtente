@@ -18,6 +18,8 @@ import { IGRPDataTable } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from "next/navigation";
+import { anyZodType } from "@/app/types/zod-types";
+import { utenteFormSchema, UtenteFormData } from '@/app/(myapp)/functions/services/utente-service';
 
 
 export default function PageDetalhesutenteComponent() {
@@ -82,6 +84,7 @@ function goTolistaUtente (): void {
 <div className={ cn('page','mx-auto px-4 space-y-6',)}   >
 	<div className={ cn('section',' space-x-3 space-y-3',)}   >
 	<IGRPForm
+  schema={ utenteFormSchema }
   validationMode="onBlur"
   gridClassName="flex flex-col"
 formRef={ formform1Ref }
