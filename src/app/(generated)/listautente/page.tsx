@@ -19,6 +19,7 @@ import { IGRPDataTableRowAction } from "@igrp/igrp-framework-react-design-system
 import { IGRPDataTableButtonModal } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableButtonAlert } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFilterInput } from "@igrp/igrp-framework-react-design-system";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import {fetchUtentes} from '@/app/(myapp)/functions/services/utente-service'
 import {getEstado, getTipoUtente} from '@/app/(myapp)/functions/services/config-service'
 import { useRouter } from "next/navigation";
@@ -49,12 +50,17 @@ export default function PageListautenteComponent() {
   
   
 const router = useRouter()
+const toast = useIGRPToast();
 
 const [loading, setLoading] = useState(false)
+const isMountedRef = useRef(true);
+
 useEffect(() => {
-  let isMounted = true; // flag de controle
+  // Set isMountedRef to true when component mounts
+  isMountedRef.current = true;
 
   const loadData = async () => {    
+    if (!isMountedRef.current) return;
 
     setLoading(true);      
     
@@ -63,7 +69,7 @@ useEffect(() => {
     try {
       const { list, total, options,totalCamara,totalCidadao,totalEmpresa } = await fetchUtentes( {}, inputSearchinputSearch1Value); // toda a lógica está aqui
 
-      if (isMounted){
+      if (isMountedRef.current){
         setContentTabletable1(list);   
 
         setStatstatsCard2Value(total);
@@ -77,16 +83,17 @@ useEffect(() => {
           setMessage(data.message); */
       }
     }  catch (e) {
-      if (isMounted) console.error(e);
+      if (isMountedRef.current) console.error(e);
     } finally {
-      if (isMounted) setLoading(false);
+      if (isMountedRef.current) setLoading(false);
     }
   };
 
   loadData();
 
   return () => {
-    isMounted = false; // cleanup quando o componente for desmontado
+    // Set isMountedRef to false when component unmounts
+    isMountedRef.current = false;
   };
 }, [inputSearchinputSearch1Value]);
 
@@ -100,6 +107,39 @@ function goToeditarUtente (id: string): void {
 
 function goTodetalhesUtente (id: string): void {
   router.push("detalhesutente?id="+id);
+}
+
+async function handleDeleteUtente(id: number, nome: string): Promise<void> {
+  try {
+    await deleteUtente(id);
+    
+    // Mostrar notificação de sucesso
+    toast.igrpToast({
+      title: "Utente inativado com sucesso!",
+      description: `${nome} foi inativado no sistema.`,
+      type: "success",
+      duration: 5000,
+    });
+    
+    // Atualizar a lista após inativação
+    const { list, total, totalCamara, totalCidadao, totalEmpresa } = await fetchUtentes({}, inputSearchinputSearch1Value);
+    
+    setContentTabletable1(list);
+    setStatstatsCard2Value(total);
+    setStatstatsCard1Value(totalCamara);
+    setStatstatsCard3Value(totalEmpresa);
+    setStatstatsCard4Value(totalCidadao);
+  } catch (error) {
+    console.error('[LOG-PAGE] Erro ao inativar utente:', error);
+    
+    // Mostrar notificação de erro
+    toast.igrpToast({
+      title: "Erro ao inativar utente",
+      description: "Ocorreu um erro ao processar a operação. Por favor, tente novamente.",
+      type: "error",
+      duration: 5000,
+    });
+  }
 }
 
 
@@ -247,17 +287,11 @@ options={ selectcombobox1Options }
 </IGRPButton>
 </div>
 <IGRPDataTable<Table1, Table1>
-  showPagination={ false }
+  showPagination={ true }
   className={ cn() }
   columns={
     [
-        {
-          id: 'id',
-          cell: ({ row }) => {
-          <span className="bg-red-600 text-yellow-300 px-2 py-1 rounded">Unsupported Component</span>
-          },
-        filterFn: IGRPDataTableFacetedFilterFn
-        },
+        
         {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title="Nº Utente" />)
 ,accessorKey: 'numeroUtente',
@@ -309,7 +343,7 @@ className={ `${bgClass} ${textClass} ${className}` }
         filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Acções'
+          header: ''
 ,accessorKey: 'tableActionListCell1',
           enableHiding: false,cell: ({ row }) => {
           const rowData = row.original;
@@ -350,8 +384,7 @@ labelTrigger="Delete"
   showCancel={ true }
   showConfirm={ true }
   className={ cn('block','',) }
-  onClickConfirm={ () => deleteUtente(Number(rowData.id)) }
-  data-slot
+  onClickConfirm={ () => handleDeleteUtente(Number(rowData.id), rowData.nomeUtente) }
 >
 </IGRPDataTableButtonAlert>
 </IGRPDataTableRowAction>

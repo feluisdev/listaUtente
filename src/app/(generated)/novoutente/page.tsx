@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense, useMemo, useCallback } from 'react';
 import { cn } from '@igrp/igrp-framework-react-design-system';
 import { IGRPPageHeader } from "@igrp/igrp-framework-react-design-system";
 import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
@@ -17,6 +17,7 @@ import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { IGRPInputText } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDatePicker } from "@igrp/igrp-framework-react-design-system";
 import { IGRPCardFooter } from "@igrp/igrp-framework-react-design-system";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import { utenteFormSchema,initialUtenteForm, UtenteFormData} from '@/app/(myapp)/functions/services/utente-service'
 import {getTipoUtente} from '@/app/(myapp)/functions/services/config-service'
 import { useRouter, useSearchParams } from "next/navigation";
@@ -39,30 +40,31 @@ function NovoUtenteContent() {
     nome: z.string().optional(),
     nif: z.string().optional(),
     bi: z.string().optional(),
-    nome_mae: z.string().optional(),
+    nomeMae: z.string().optional(),
     nomePai: z.string().optional(),
     dataNascimento: z.date().optional(),
     morada: z.string().optional(),
     telefone: z.string().optional(),
     email: z.string().optional(),
-    inputText7: z.string().optional()
+    cxPostal: z.string().optional()
 })
 
 type Form1ZodType = typeof form1;
 
-const initForm1: z.infer<Form1ZodType> = {
+// Use useMemo to prevent initForm1 from changing on every render
+const initForm1 = useMemo(() => ({
     tipoUtente: "",
     nome: "",
     nif: "",
     bi: "",
-    nome_mae: "",
+    nomeMae: "",
     nomePai: "",
     dataNascimento: undefined,
     morada: "",
     telefone: "",
     email: "",
-    inputText7: ""
-}
+    cxPostal: ""
+}), []);
 
 
   const [contentFormform1, setContentFormform1] = useState<z.infer<any>>(initForm1);
@@ -70,17 +72,18 @@ const initForm1: z.infer<Form1ZodType> = {
   const formform1Ref = useRef<IGRPFormHandle<z.infer<anyZodType>> | null>(null);
   
 const router = useRouter()
-
+const toast = useIGRPToast();
     
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
 
-// Importações dinâmicas para funções usadas condicionalmente
-  const utenteService = () => import('@/app/(myapp)/functions/services/utente-service');
+// Use useCallback to prevent utenteService from changing on every render
+const utenteService = useCallback(() => import('@/app/(myapp)/functions/services/utente-service'), []);
 
 
   useEffect(() => {
+    let isMounted = true; // Flag para controlar se o componente está montado
     const loadFormData = async () => {
       setLoading(true);
       try {
@@ -92,7 +95,7 @@ const router = useRouter()
         // Verificar se existe um ID na URL (modo edição)
         const id = searchParams.get('id');
         
-        if (id) {
+        if (id && isMounted) { // Verificar se o componente ainda está montado
           console.log(`[LOG-PAGE] Tentando carregar utente ID: ${id}`);
           try {
             // Importação dinâmica das funções necessárias para edição
@@ -102,38 +105,49 @@ const router = useRouter()
             const utenteData = await fetchUtenteById(Number(id));
             console.log('[LOG-PAGE] Dados do utente recebidos:', utenteData);
 
-            if (utenteData) {
+            if (utenteData && isMounted) { // Verificar novamente se o componente está montado
               // Usar a função de formatação do serviço
               const formattedData = formatUtenteDataForForm(utenteData);
               
               console.log('[LOG-PAGE] Dados formatados para o formulário:', formattedData);
               setContentFormform1(formattedData);
               setIsEditMode(true);
-            } else {
+            } else if (isMounted) {
               console.error('[LOG-PAGE] Dados do utente não encontrados');
               setContentFormform1(initForm1);
             }
           } catch (error) {
-            console.error('[LOG-PAGE] Erro ao carregar dados do utente:', error);
-            setContentFormform1(initForm1);
+            if (isMounted) {
+              console.error('[LOG-PAGE] Erro ao carregar dados do utente:', error);
+              setContentFormform1(initForm1);
+            }
           }
-        } else {
+        } else if (isMounted) {
           console.log('[LOG-PAGE] Modo de criação - usando valores iniciais');
           setContentFormform1(initForm1);
           setIsEditMode(false);
         }
       } catch (error) {
-        console.error('[LOG-PAGE] Erro ao carregar dados do formulário:', error);
+        if (isMounted) {
+          console.error('[LOG-PAGE] Erro ao carregar dados do formulário:', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadFormData();
-  }, [searchParams]);
+
+    return () => {
+      isMounted = false; // Limpar quando o componente for desmontado
+    };
+  }, [searchParams, initForm1, utenteService]); // Dependências do useEffect
 
   const handleSubmit = async (data: UtenteFormData) => {
     console.log('[LOG-PAGE] Dados do formulário para envio:', data);
+    setLoading(true);
 
     // Preparar dados para envio à API
     const id = searchParams.get('id');
@@ -143,10 +157,38 @@ const router = useRouter()
       const { handleUtenteSubmit } = await utenteService();
       
       // Utilizar a função do serviço para processar a submissão
-      return handleUtenteSubmit(data, id);
+      const result = await handleUtenteSubmit(data, id);
+      
+      // Mostrar notificação de sucesso
+      toast.igrpToast({
+        title: isEditMode ? "Utente atualizado com sucesso!" : "Utente criado com sucesso!",
+        description: `${data.nome} foi ${isEditMode ? 'atualizado' : 'registrado'} no sistema.`,
+        type: "success",
+        duration: 5000,
+      });
+      
+      // Redirecionar para a lista após sucesso
+      setTimeout(() => {
+        router.push("listautente");
+      }, 1500);
+      
+      return result;
     } catch (error) {
       console.error('[LOG-PAGE] Erro ao processar submissão:', error);
-      throw error;
+      
+      // Mostrar notificação de erro
+      toast.igrpToast({
+        title: "Erro ao salvar utente",
+        description: "Ocorreu um erro ao processar a operação. Por favor, tente novamente.",
+        type: "error",
+        duration: 5000,
+      });
+      
+      // Não lançar o erro para evitar que o formulário seja reiniciado
+      // e os dados sejam perdidos
+      return false; // Retornar false para indicar que houve um erro
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -160,7 +202,7 @@ function onClicklistaUtente (): void {
 <div className={ cn('page','mx-auto px-4 space-y-6',)}   >
 	<div className={ cn('section',' space-x-3 space-y-3',)}   >
 	<IGRPPageHeader
-  title="Novo Utente"
+  title={isEditMode ? `Editar Utente Nr: ${contentFormform1.nrUtente || ''}` : "Novo Utente"}
   variant="h3"
   className={ cn() }
 >
@@ -182,13 +224,19 @@ function onClicklistaUtente (): void {
   iconName="Save"
   className={ cn() }
   onClick={ () => formform1Ref.current?.submit() }
+  disabled={loading}
 >
-  Gravar
+  {isEditMode ? "Atualizar" : "Gravar"}
 </IGRPButton>
 
 </div>
 </IGRPPageHeader>
-
+{loading ? (
+          <div className="flex justify-center items-center p-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <span className="ml-3">Carregando...</span>
+          </div>
+        ) : (
 <IGRPForm
   schema={ form1 }
   validationMode="onBlur"
@@ -258,7 +306,7 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="nome_mae"
+  name="nomeMae"
 placeholder=""
   label="Nome da Mãe"
   className={ cn('col-span-1',) }
@@ -328,6 +376,7 @@ placeholder=""
 </IGRPCardFooter>
 </IGRPCard>
 </>
-</IGRPForm></div></div>
+</IGRPForm>)}
+</div></div>
   );
 }

@@ -106,6 +106,28 @@ export async function fetchUtentes(params: {
 
 // GET by ID
 export async function fetchUtenteById(id: number) {
+    // Usar um cache simples para evitar chamadas duplicadas
+    const cacheKey = `utente_${id}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    
+    // Se temos dados em cache e eles não expiraram, use-os
+    if (cachedData) {
+        try {
+            const { data, timestamp } = JSON.parse(cachedData);
+            const now = new Date().getTime();
+            const cacheAge = now - timestamp;
+            
+            // Cache válido por 5 minutos (300000 ms)
+            if (cacheAge < 300000) {
+                console.log(`[LOG] Usando dados em cache para utente ID ${id}`);
+                return data;
+            }
+        } catch (error) {
+            console.error('[LOG] Erro ao ler cache:', error);
+            // Se houver erro ao ler o cache, continue com a requisição normal
+        }
+    }
+    
     console.log(`[LOG] Buscando utente por ID: ${id}`);
     try {
         if (!id) {
@@ -126,6 +148,17 @@ export async function fetchUtenteById(id: number) {
         if (!data || !data.id) {
             console.error('[LOG] Dados inválidos recebidos da API:', data);
             throw new Error('Dados inválidos recebidos da API');
+        }
+        
+        // Armazenar no cache
+        try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({
+                data,
+                timestamp: new Date().getTime()
+            }));
+        } catch (error) {
+            console.error('[LOG] Erro ao armazenar em cache:', error);
+            // Continuar mesmo se não conseguir armazenar em cache
         }
         
         return data;
