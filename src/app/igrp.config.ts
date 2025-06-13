@@ -41,9 +41,11 @@
  *
  */
 
-export default {
+const igrpConfig = {
   types: [],
   actions: [],
   functions: ['functions/services/utente-service'],
   components: []
 };
+
+export default igrpConfig;
