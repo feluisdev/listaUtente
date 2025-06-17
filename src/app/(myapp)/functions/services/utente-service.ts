@@ -1,94 +1,389 @@
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { z } from "zod";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 
-export async function fetchUtentes(search = '') {
-    const res = await fetch('/api/utente');
+// Esquema de validação para o formulário de utente
+export const utenteFormSchema = z.object({
+    id: z.number().optional(),
+    tipo: z.string().optional(),
+    nome: z.string().optional(),
+    numero: z.string().optional(),
+    nif: z.string().optional(),
+    tipoIdentificacao: z.string().optional(), // Novo campo do backend
+    identificacao: z.string().optional(), // Novo campo do backend
+    nomeMae: z.string().optional(),
+    nomePai: z.string().optional(),
+    dataNascimento: z.date().optional(),
+    genero: z.string().optional(), // Campo para gênero
+    nacionalidade: z.string().optional(), // Campo para nacionalidade
+    estado: z.string().optional(),
+    endereco: z.string().optional(),
+    telefone: z.string().optional(),
+    email: z.string().optional(),
+    caixaPostal: z.string().optional(),
+    departamentoResponsavel: z.string().optional()
+  });
+  
+  // Tipo derivado do esquema
+  export type UtenteFormType = typeof utenteFormSchema;
+  export type UtenteFormData = z.infer<UtenteFormType>;
+  
+  // Valores iniciais para o formulário
+export const initialUtenteForm: UtenteFormData = {
+    id: undefined,
+    tipo: "",
+    nome: "",
+    numero: "",
+    nif: "",
+    tipoIdentificacao: "", // Novo campo do backend
+    identificacao: "", // Novo campo do backend
+    nomeMae: "",
+    nomePai: "",
+    dataNascimento: undefined,
+    genero: "", // Campo para gênero
+    nacionalidade: "", // Campo para nacionalidade
+    estado: "ATIVO",
+    endereco: "", // Adicionado para compatibilidade com o backend
+    telefone: "",
+    email: "",
+    caixaPostal: "",
+    departamentoResponsavel: ""
+  };
 
-    if (!res.ok) throw new Error('Erro ao buscar dados');
+export async function fetchUtentes(params: {
+  search?: string;
+  tipo?: string;
+  numero?: string;
+  nome?: string;
+  nif?: string;
+  documento?: string;
+  estado?: string;
+} = {}, inputSearchinputSearch1Value: string) {
+    // Construir URL com parâmetros de busca
+    let url = '/api/utente';
+    const queryParams = [];
+    
+    if (params.tipo) queryParams.push(`tipo=${params.tipo}`);
+    if (params.numero) queryParams.push(`numeroUtente=${params.numero}`);
+    if (params.nome) queryParams.push(`nome=${params.nome}`);
+    if (params.nif) queryParams.push(`nif=${params.nif}`);
+    if (params.documento) queryParams.push(`documento=${params.documento}`);
+    if (params.estado) queryParams.push(`estado=${params.estado}`);
+    
+    if (queryParams.length > 0) {
+        url += `?${queryParams.join('&')}`;
+    }
+    
+    console.log('[LOG] Iniciando busca de utentes:', { params, url });
+    
+    try {
+        const res = await fetch(url);
 
-    const raw = await res.json();
+        if (!res.ok) {
+            console.error('[LOG] Erro ao buscar utentes:', { status: res.status, statusText: res.statusText });
+            throw new Error('Erro ao buscar dados');
+        }
 
-    const filtered = raw.filter(
-        (c) =>
-            c.numeroUtente.toLowerCase().includes(search.toLowerCase()),
-    );
+        const raw = await res.json();
+        console.log(`[LOG] Utentes encontrados: ${raw.length}`);
 
+        // Se tiver um termo de busca, filtra localmente
+        let filtered = raw;
+        if (params.search) {
+            filtered = raw.filter(
+                (c: { numeroUtente: string; }) => c.numeroUtente.toLowerCase().includes(params.search?.toLowerCase() || '')
+            );
+            console.log(`[LOG] Utentes filtrados por "${params.search}": ${filtered.length}`);
+        }
 
-    return {
-        list: filtered,
-        options: [{ label: 'Ativo', value: 'ATIVO' }, { label: 'Inativo', value: 'INATIVO' }],
-        total: filtered.length,
-        message:
-            filtered.length > 0 ? 'Dados carregados com sucesso' : 'Nenhum utente encontrado',
-    };
+        return {
+            list: filtered,
+            options: [{ label: 'Ativo', value: 'ATIVO' }, { label: 'Inativo', value: 'INATIVO' }],
+            total: filtered.length,
+            totalCidadao: filtered.filter((c: { tipoUtente: string; }) => c.tipoUtente === 'CIDADAO').length,
+            totalEmpresa: filtered.filter((c: { tipoUtente: string; }) => c.tipoUtente === 'EMPRESA').length,
+            totalCamara: filtered.filter((c: { tipoUtente: string; }) => c.tipoUtente === 'SERV_PUBLICO').length,
+            message:
+                filtered.length > 0 ? 'Dados carregados com sucesso' : 'Nenhum utente encontrado',
+        };
+    } catch (error) {
+        console.error('[LOG] Erro na função fetchUtentes:', error);
+        throw error;
+    }
 }
 
 // GET by ID
 export async function fetchUtenteById(id: number) {
-    const res = await fetch(`/api/utente?id=${id}`);
-    if (!res.ok) throw new Error('Erro ao buscar utente');
-    return await res.json();
+    // Usar um cache simples para evitar chamadas duplicadas
+    const cacheKey = `utente_${id}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    
+    // Se temos dados em cache e eles não expiraram, use-os
+    if (cachedData) {
+        try {
+            const { data, timestamp } = JSON.parse(cachedData);
+            const now = new Date().getTime();
+            const cacheAge = now - timestamp;
+            
+            // Cache válido por 5 minutos (300000 ms)
+            if (cacheAge < 300000) {
+                console.log(`[LOG] Usando dados em cache para utente ID ${id}`);
+                return data;
+            }
+        } catch (error) {
+            console.error('[LOG] Erro ao ler cache:', error);
+            // Se houver erro ao ler o cache, continue com a requisição normal
+        }
+    }
+    
+    console.log(`[LOG] Buscando utente por ID: ${id}`);
+    try {
+        if (!id) {
+            console.error('[LOG] ID inválido fornecido para fetchUtenteById');
+            throw new Error('ID inválido');
+        }
+        
+        const res = await fetch(`/api/utente?id=${id}`);
+        if (!res.ok) {
+            console.error(`[LOG] Erro ao buscar utente ID ${id}:`, { status: res.status, statusText: res.statusText });
+            throw new Error(`Erro ao buscar utente: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log(`[LOG] Utente ID ${id} encontrado:`, { data });
+        
+        // Verificar se os dados recebidos são válidos
+        if (!data || !data.id) {
+            console.error('[LOG] Dados inválidos recebidos da API:', data);
+            throw new Error('Dados inválidos recebidos da API');
+        }
+        
+        // Armazenar no cache
+        try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({
+                data,
+                timestamp: new Date().getTime()
+            }));
+        } catch (error) {
+            console.error('[LOG] Erro ao armazenar em cache:', error);
+            // Continuar mesmo se não conseguir armazenar em cache
+        }
+        
+        return data;
+    } catch (error) {
+        console.error(`[LOG] Erro na função fetchUtenteById:`, error);
+        throw error;
+    }
 }
 
 // POST: criar novo utente
 export async function createUtente(data: any) {
-    const res = await fetch('/api/utente', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
+    console.log('[LOG] Iniciando criação de utente:', { nome: data.nomeUtente, tipo: data.tipoUtente });
+    try {
+        const res = await fetch('/api/utente', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
 
-    if (!res.ok) throw new Error('Erro ao criar utente');
-    return await res.json();
+        if (!res.ok) {
+            console.error('[LOG] Erro ao criar utente:', { status: res.status, statusText: res.statusText });
+            throw new Error('Erro ao criar utente');
+        }
+        const result = await res.json();
+        console.log('[LOG] Utente criado com sucesso:', { id: result.id, nome: result.nomeUtente });
+        return result;
+    } catch (error) {
+        console.error('[LOG] Erro na função createUtente:', error);
+        throw error;
+    }
 }
 
 // PUT: atualizar utente
 export async function updateUtente(id: number, data: any) {
-    const res = await fetch(`/api/utente?id=${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
+    console.log(`[LOG] Iniciando atualização de utente ID ${id}:`, { data });
+    try {
+        const res = await fetch(`/api/utente?id=${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
 
-    if (!res.ok) throw new Error('Erro ao atualizar utente');
-    return await res.json();
+        if (!res.ok) {
+            console.error(`[LOG] Erro ao atualizar utente ID ${id}:`, { status: res.status, statusText: res.statusText });
+            throw new Error('Erro ao atualizar utente');
+        }
+        const result = await res.json();
+        console.log(`[LOG] Utente ID ${id} atualizado com sucesso`);
+        return result;
+    } catch (error) {
+        console.error('[LOG] Erro na função updateUtente:', error);
+        throw error;
+    }
 }
 
-// DELETE: remover utente
+// DELETE: inativar utente (não remove completamente, apenas muda o estado para inativo)
 export async function deleteUtente(id: number) {
-    const res = await fetch(`/api/utente?id=${id}`, {
-        method: 'DELETE',
-    });
+    console.log(`[LOG] Iniciando inativação de utente ID ${id}`);
+    try {
+        const res = await fetch(`/api/utente?id=${id}`, {
+            method: 'DELETE',
+        });
 
-    if (!res.ok) throw new Error('Erro ao remover utente');
-    return await res.json();
+        if (!res.ok) {
+            console.error(`[LOG] Erro ao inativar utente ID ${id}:`, { status: res.status, statusText: res.statusText });
+            throw new Error('Erro ao inativar utente');
+        }
+        const result = await res.json();
+        console.log(`[LOG] Utente ID ${id} inativado com sucesso`);
+        return result;
+    } catch (error) {
+        console.error('[LOG] Erro na função deleteUtente:', error);
+        throw error;
+    }
 }
 
 
 
-export function getStatusBadge(utente?: any): {
-    iconName?: string;
-    bgClass?: string;
-    textClass?: string;
-    label?: string;
-    className?: string;
-} {
-    if (!utente) return {};
-    const bgClass =
-        utente.estado === 'ATIVO'
-            ? 'bg-green-100 text-green-800 hover:bg-green-100'
-            : 'bg-red-100 text-red-800 hover:bg-red-100';
+// Função para formatar dados do utente para o formulário
+export function formatUtenteDataForForm(utenteData: any): UtenteFormData {
+    const formattedData = { ...utenteData };
+    
+    // Converter a data de nascimento para objeto Date se existir
+    if (formattedData.dataNascimento) {
+      formattedData.dataNascimento = new Date(formattedData.dataNascimento);
+    }
+  
+    // Mapear campos do backend para o formulário
+    if (formattedData.nomeUtente && !formattedData.nome) {
+      formattedData.nome = formattedData.nomeUtente;
+    }
 
-    const label = utente.estado;
-    return { label, bgClass };
+    // Mapear o campo numero para nrUtente
+    if (formattedData.numero) {
+      formattedData.numero = formattedData.numero;
+    }
+
+    // Garantir que o campo endereco está preenchido
+    if (formattedData.morada && !formattedData.endereco) {
+      formattedData.endereco = formattedData.morada;
+    }
+
+    // Garantir que o campo identificacao está preenchido
+    if (formattedData.bi && !formattedData.identificacao) {
+      formattedData.identificacao = formattedData.bi;
+      // Se não tiver tipo de identificação definido, assume BI
+      if (!formattedData.tipoIdentificacao) {
+        formattedData.tipoIdentificacao = 'BI';
+      }
+    }
+  
+    // Garantir que todos os campos estejam mapeados corretamente
+    if (formattedData.nome_mae && !formattedData.nomeMae) {
+      formattedData.nomeMae = formattedData.nome_mae;
+    }
+
+    // Mapear caixaPostal para cxPostal e vice-versa
+    if (formattedData.caixaPostal && !formattedData.cxPostal) {
+      formattedData.cxPostal = formattedData.caixaPostal;
+    } else if (formattedData.cxPostal && !formattedData.caixaPostal) {
+      formattedData.caixaPostal = formattedData.cxPostal;
+    }
+
+    // Garantir que os campos de gênero e nacionalidade estejam definidos
+    if (!formattedData.genero) {
+      formattedData.genero = "";
+    }
+
+    if (!formattedData.nacionalidade) {
+      formattedData.nacionalidade = "";
+    }
+  
+    if (!formattedData.estado) {
+      formattedData.estado = 'ATIVO';
+    }
+    
+    return formattedData as UtenteFormData;
+  }
+  
+  // Função para preparar dados para criação de utente
+export function prepareCreateUtenteData(data: UtenteFormData) {
+    // Determinar qual campo usar para identificacao
+    const identificacao = data.identificacao;
+    
+    return {
+      nome: data.nome,
+      tipo: data.tipo,
+      nif: data.nif,
+      tipoIdentificacao: data.tipoIdentificacao || 'BI', // Usar o tipo de identificação ou padrão BI
+      identificacao: identificacao, // Usar o campo identificacao ou bi
+      nomeMae: data.nomeMae,
+      nomePai: data.nomePai,
+      dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
+      genero: data.genero, // Campo para gênero
+      nacionalidade: data.nacionalidade, // Campo para nacionalidade
+      estado: data.estado,
+      endereco: data.endereco, // Usar endereco ou morada
+      telefone: data.telefone,
+      email: data.email,
+      caixaPostal: data.caixaPostal,
+      departamentoResponsavel: data.departamentoResponsavel
+    };
+  }
+  
+  // Função para preparar dados para atualização de utente
+export function prepareUpdateUtenteData(data: UtenteFormData) {
+    // Determinar qual campo usar para identificacao
+    const identificacao = data.identificacao ;
+    
+    return {
+      nome: data.nome,
+      endereco: data.endereco , // Usar endereco ou morada
+      telefone: data.telefone,
+      email: data.email,
+      caixaPostal: data.caixaPostal,
+      departamentoResponsavel: data.departamentoResponsavel,
+      nomeMae: data.nomeMae,
+      nomePai: data.nomePai,
+      nif: data.nif,
+      tipoIdentificacao: data.tipoIdentificacao || 'BI', // Usar o tipo de identificação ou padrão BI
+      identificacao: identificacao, // Usar o campo identificacao ou bi
+      genero: data.genero, // Campo para gênero
+      nacionalidade: data.nacionalidade, // Campo para nacionalidade
+      tipo: data.tipo,
+      dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
+      estado: data.estado
+    };
+  }
+
+  
+
+
+// Função para processar a submissão do formulário de utente
+export async function handleUtenteSubmit(data: UtenteFormData, id?: string | null) {
+  console.log('[LOG] Dados do formulário para envio:', data);
+
+  try {
+    if (id) {
+      // Modo edição
+      // Usar a função de preparação de dados do serviço
+      const updateData = prepareUpdateUtenteData(data);
+
+      console.log('[LOG] Dados formatados para API (update):', updateData);
+      return updateUtente(Number(id), updateData);
+    } else {
+      // Modo criação
+      // Usar a função de preparação de dados do serviço
+      const createData = prepareCreateUtenteData(data);
+
+      console.log('[LOG] Dados formatados para API (create):', createData);
+      return createUtente(createData);
+    }
+  } catch (error) {
+    console.error('[LOG] Erro ao processar submissão:', error);
+    throw error;
+  }
 }
 
-export function getTipoUtente() {
+  
 
-    const tiposUtente = [
-        { label: 'Cidadão', value: 'CIDADAO' },
-        { label: 'Camara', value: 'EMPRESA' },
-        { label: 'Empresa', value: 'CAMARA_MUNICPAL' }]
-
-    return tiposUtente;
-
-}
