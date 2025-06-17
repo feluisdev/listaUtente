@@ -254,54 +254,6 @@ export function formatUtenteDataForForm(utenteData: any): UtenteFormData {
       formattedData.dataNascimento = new Date(formattedData.dataNascimento);
     }
   
-    // Mapear campos do backend para o formulário
-    if (formattedData.nomeUtente && !formattedData.nome) {
-      formattedData.nome = formattedData.nomeUtente;
-    }
-
-    // Mapear o campo numero para nrUtente
-    if (formattedData.numero) {
-      formattedData.numero = formattedData.numero;
-    }
-
-    // Garantir que o campo endereco está preenchido
-    if (formattedData.morada && !formattedData.endereco) {
-      formattedData.endereco = formattedData.morada;
-    }
-
-    // Garantir que o campo identificacao está preenchido
-    if (formattedData.bi && !formattedData.identificacao) {
-      formattedData.identificacao = formattedData.bi;
-      // Se não tiver tipo de identificação definido, assume BI
-      if (!formattedData.tipoIdentificacao) {
-        formattedData.tipoIdentificacao = 'BI';
-      }
-    }
-  
-    // Garantir que todos os campos estejam mapeados corretamente
-    if (formattedData.nome_mae && !formattedData.nomeMae) {
-      formattedData.nomeMae = formattedData.nome_mae;
-    }
-
-    // Mapear caixaPostal para cxPostal e vice-versa
-    if (formattedData.caixaPostal && !formattedData.cxPostal) {
-      formattedData.cxPostal = formattedData.caixaPostal;
-    } else if (formattedData.cxPostal && !formattedData.caixaPostal) {
-      formattedData.caixaPostal = formattedData.cxPostal;
-    }
-
-    // Garantir que os campos de gênero e nacionalidade estejam definidos
-    if (!formattedData.genero) {
-      formattedData.genero = "";
-    }
-
-    if (!formattedData.nacionalidade) {
-      formattedData.nacionalidade = "";
-    }
-  
-    if (!formattedData.estado) {
-      formattedData.estado = 'ATIVO';
-    }
     
     return formattedData as UtenteFormData;
   }

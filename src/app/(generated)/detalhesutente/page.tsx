@@ -92,7 +92,7 @@ formRef={ formform1Ref }
   onSubmit={ (e) => {} }
   defaultValues={ contentFormform1 }
 >
-  <>
+  
   <IGRPPageHeader
   title="Detalhes do Utente"
   variant="h3"
@@ -270,7 +270,7 @@ placeholder=""
   
 />
   <IGRPInputText
-  name="cxPostal"
+  name="caixaPostal"
 placeholder=""
   disabled
   label="Caixa Postal"
@@ -292,7 +292,7 @@ placeholder=""
 >
 </IGRPCardFooter>
 </IGRPCard></div></div></div>
-</>
+
 </IGRPForm>
 <IGRPHeadline
   title="Serviços Associados"

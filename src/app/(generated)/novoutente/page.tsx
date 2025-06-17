@@ -50,8 +50,8 @@ function NovoUtenteContent() {
     endereco: z.string().optional(),
     telefone: z.string().optional(),
     email: z.string().optional(),
-    cxPostal: z.string().optional(),
-    departamentoResponsavel: z.string().optional()
+    caixaPostal: z.string().optional(),
+    departamentoResponsavel: z.string().optional(),
   })
 
   type Form1ZodType = typeof form1;
@@ -71,7 +71,7 @@ function NovoUtenteContent() {
     endereco: "",
     telefone: "",
     email: "",
-    cxPostal: "",
+    caixaPostal: "",
     departamentoResponsavel: ""
   }), []);
 
@@ -222,7 +222,7 @@ function NovoUtenteContent() {
     <div className={cn('page', 'mx-auto px-4 space-y-6',)}   >
       <div className={cn('section', ' space-x-3 space-y-3',)}   >
         <IGRPPageHeader
-          title={isEditMode ? `Editar Utente Nr: ${contentFormform1.nrUtente || ''}` : "Novo Utente"}
+          title={isEditMode ? `Editar Utente Nr: ${contentFormform1.numero || ''}` : "Novo Utente"}
           variant="h3"
           className={cn()}
         >
@@ -266,7 +266,7 @@ function NovoUtenteContent() {
             onSubmit={handleSubmit}
             defaultValues={contentFormform1}
           >
-            <>
+            
               <IGRPCard
                 className={cn()}
 
@@ -409,7 +409,7 @@ function NovoUtenteContent() {
 
                     />
                     <IGRPInputText
-                      name="cxPostal"
+                      name="caixaPostal"
                       placeholder=""
                       label="Caixa Postal"
                       className={cn('col-span-1',)}
@@ -429,7 +429,7 @@ function NovoUtenteContent() {
                 >
                 </IGRPCardFooter>
               </IGRPCard>
-            </>
+            
           </IGRPForm>)}
       </div></div>
   );

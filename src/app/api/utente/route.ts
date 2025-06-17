@@ -69,7 +69,9 @@ export async function GET(req: NextRequest) {
                 identificacao: data.identificacao, // Novo campo do backend
                 nomeMae: data.nomeMae,
                 nomePai: data.nomePai,
-                departamentoResponsavel: data.departamentoResponsavel
+                departamentoResponsavel: data.departamentoResponsavel,
+                genero: data.genero,
+                nacionalidade: data.nacionalidade
             };
             
             return NextResponse.json(utente);
