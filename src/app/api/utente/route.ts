@@ -55,19 +55,21 @@ export async function GET(req: NextRequest) {
             
             const utente = {
                 id: data.id,
-                nrUtente: data.nrUtente,
+                numero: data.numero, // Mapeando 'numero' do backend para 'nrUtente' no frontend
                 estado: data.estado,
-                tipoUtente: data.tipoUtente,
-                nomeUtente: data.nome,
+                tipo: data.tipoUtente,
+                nome: data.nome,
                 nif: data.nif,
                 dataNascimento: data.dataNascimento,
                 email: data.email,
                 telefone: data.telefone,
-                morada: data.morada,
-                cxPostal: data.cxPostal,
-                bi: data.bi,
+                endereco: data.endereco, // Mapeando 'endereco' do backend para 'morada' no frontend
+                caixaPostal: data.caixaPostal,
+                tipoIdentificacao: data.tipoIdentificacao, // Novo campo do backend
+                identificacao: data.identificacao, // Novo campo do backend
                 nomeMae: data.nomeMae,
                 nomePai: data.nomePai,
+                departamentoResponsavel: data.departamentoResponsavel
             };
             
             return NextResponse.json(utente);
@@ -121,11 +123,13 @@ export async function GET(req: NextRequest) {
 
         const utentes = data.content.map((item: any) => ({
             id: item.id,
-            numeroUtente: item.nrUtente,
+            numeroUtente: item.numero, // Mapeando 'numero' do backend para 'numeroUtente' no frontend
             estado: item.estado,
             tipoUtente: item.tipoUtente,
             nomeUtente: item.nome,
             nif: item.nif,
+            identificacao: item.identificacao, // Novo campo do backend
+            tipoIdentificacao: item.tipoIdentificacao, // Novo campo do backend
         }));
 
         return NextResponse.json(utentes);

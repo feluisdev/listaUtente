@@ -154,10 +154,18 @@ placeholder=""
   
 />
 <IGRPInputText
-  name="bi"
+  name="identificacao"
 placeholder=""
   disabled
-  label="CNI"
+  label="Identificação"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="tipoIdentificacao"
+placeholder=""
+  disabled
+  label="Tipo de Identificação"
   className={ cn('col-span-1',) }
   
 />
@@ -190,6 +198,22 @@ placeholder=""
 placeholder=""
   disabled
   label="Data de Nascimento"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="genero"
+placeholder=""
+  disabled
+  label="Gênero"
+  className={ cn('col-span-1',) }
+  
+/>
+<IGRPInputText
+  name="nacionalidade"
+placeholder=""
+  disabled
+  label="Nacionalidade"
   className={ cn('col-span-1',) }
   
 /></div>
@@ -238,10 +262,10 @@ placeholder=""
   
 />
   <IGRPInputText
-  name="modara"
+  name="endereco"
 placeholder=""
   disabled
-  label="Morada"
+  label="Endereço"
   className={ cn() }
   
 />
@@ -250,6 +274,14 @@ placeholder=""
 placeholder=""
   disabled
   label="Caixa Postal"
+  className={ cn() }
+  
+/>
+<IGRPInputText
+  name="departamentoResponsavel"
+placeholder=""
+  disabled
+  label="Departamento Responsável"
   className={ cn() }
   
 />

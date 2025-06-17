@@ -3,7 +3,7 @@ export function getTipoUtente() {
 
     const tiposUtente = [
         { label: 'Cidadão', value: 'CIDADAO' },
-        { label: 'Servidor Público', value: 'SERV_PUBLICO' },
+        { label: 'Entidade Pública', value: 'SERV_PUBLICO' },
         { label: 'Empresa', value: 'EMPRESA' }]
 
     return tiposUtente;
@@ -17,6 +17,30 @@ export function getEstado() {
         { label: 'Inativo', value: 'INATIVO' }]
 
     return tiposUtente;
+
+}
+
+export function getTipoDocumento() {
+
+    const tiposUtente = [
+        { label: 'Bilhete de Identidade', value: 'BI' },
+        { label: 'Cartão Nacional de Identificação', value: 'CNI' },
+        { label: 'Passaporte', value: 'PEC' },
+        { label: 'Número de Identificação de Pessoa Coletiva', value: 'NIPC' },
+    ]
+
+    return tiposUtente;
+
+}
+
+export function getGenero() {
+
+    const generos = [
+        { label: 'Masculino', value: 'MASCULINO' },
+        { label: 'Feminino', value: 'FEMININO' }
+    ]
+
+    return generos;
 
 }
 

@@ -5,19 +5,23 @@ import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 // Esquema de validação para o formulário de utente
 export const utenteFormSchema = z.object({
     id: z.number().optional(),
-    tipoUtente: z.string().optional(),
+    tipo: z.string().optional(),
     nome: z.string().optional(),
-    nrUtente: z.string().optional(),
+    numero: z.string().optional(),
     nif: z.string().optional(),
-    bi: z.string().optional(),
+    tipoIdentificacao: z.string().optional(), // Novo campo do backend
+    identificacao: z.string().optional(), // Novo campo do backend
     nomeMae: z.string().optional(),
     nomePai: z.string().optional(),
     dataNascimento: z.date().optional(),
+    genero: z.string().optional(), // Campo para gênero
+    nacionalidade: z.string().optional(), // Campo para nacionalidade
     estado: z.string().optional(),
-    morada: z.string().optional(),
+    endereco: z.string().optional(),
     telefone: z.string().optional(),
     email: z.string().optional(),
-    cxPostal: z.string().optional()
+    caixaPostal: z.string().optional(),
+    departamentoResponsavel: z.string().optional()
   });
   
   // Tipo derivado do esquema
@@ -25,27 +29,31 @@ export const utenteFormSchema = z.object({
   export type UtenteFormData = z.infer<UtenteFormType>;
   
   // Valores iniciais para o formulário
-  export const initialUtenteForm: UtenteFormData = {
+export const initialUtenteForm: UtenteFormData = {
     id: undefined,
-    tipoUtente: "",
+    tipo: "",
     nome: "",
-    nrUtente: "",
+    numero: "",
     nif: "",
-    bi: "",
+    tipoIdentificacao: "", // Novo campo do backend
+    identificacao: "", // Novo campo do backend
     nomeMae: "",
     nomePai: "",
     dataNascimento: undefined,
+    genero: "", // Campo para gênero
+    nacionalidade: "", // Campo para nacionalidade
     estado: "ATIVO",
-    morada: "",
+    endereco: "", // Adicionado para compatibilidade com o backend
     telefone: "",
     email: "",
-    cxPostal: ""
+    caixaPostal: "",
+    departamentoResponsavel: ""
   };
 
 export async function fetchUtentes(params: {
   search?: string;
   tipo?: string;
-  numeroUtente?: string;
+  numero?: string;
   nome?: string;
   nif?: string;
   documento?: string;
@@ -56,7 +64,7 @@ export async function fetchUtentes(params: {
     const queryParams = [];
     
     if (params.tipo) queryParams.push(`tipo=${params.tipo}`);
-    if (params.numeroUtente) queryParams.push(`numeroUtente=${params.numeroUtente}`);
+    if (params.numero) queryParams.push(`numeroUtente=${params.numero}`);
     if (params.nome) queryParams.push(`nome=${params.nome}`);
     if (params.nif) queryParams.push(`nif=${params.nif}`);
     if (params.documento) queryParams.push(`documento=${params.documento}`);
@@ -250,10 +258,45 @@ export function formatUtenteDataForForm(utenteData: any): UtenteFormData {
     if (formattedData.nomeUtente && !formattedData.nome) {
       formattedData.nome = formattedData.nomeUtente;
     }
+
+    // Mapear o campo numero para nrUtente
+    if (formattedData.numero) {
+      formattedData.numero = formattedData.numero;
+    }
+
+    // Garantir que o campo endereco está preenchido
+    if (formattedData.morada && !formattedData.endereco) {
+      formattedData.endereco = formattedData.morada;
+    }
+
+    // Garantir que o campo identificacao está preenchido
+    if (formattedData.bi && !formattedData.identificacao) {
+      formattedData.identificacao = formattedData.bi;
+      // Se não tiver tipo de identificação definido, assume BI
+      if (!formattedData.tipoIdentificacao) {
+        formattedData.tipoIdentificacao = 'BI';
+      }
+    }
   
     // Garantir que todos os campos estejam mapeados corretamente
     if (formattedData.nome_mae && !formattedData.nomeMae) {
       formattedData.nomeMae = formattedData.nome_mae;
+    }
+
+    // Mapear caixaPostal para cxPostal e vice-versa
+    if (formattedData.caixaPostal && !formattedData.cxPostal) {
+      formattedData.cxPostal = formattedData.caixaPostal;
+    } else if (formattedData.cxPostal && !formattedData.caixaPostal) {
+      formattedData.caixaPostal = formattedData.cxPostal;
+    }
+
+    // Garantir que os campos de gênero e nacionalidade estejam definidos
+    if (!formattedData.genero) {
+      formattedData.genero = "";
+    }
+
+    if (!formattedData.nacionalidade) {
+      formattedData.nacionalidade = "";
     }
   
     if (!formattedData.estado) {
@@ -264,37 +307,52 @@ export function formatUtenteDataForForm(utenteData: any): UtenteFormData {
   }
   
   // Função para preparar dados para criação de utente
-  export function prepareCreateUtenteData(data: UtenteFormData) {
+export function prepareCreateUtenteData(data: UtenteFormData) {
+    // Determinar qual campo usar para identificacao
+    const identificacao = data.identificacao;
+    
     return {
       nome: data.nome,
-      tipoUtente: data.tipoUtente,
-      nrUtente: data.nrUtente,
+      tipo: data.tipo,
       nif: data.nif,
-      bi: data.bi,
+      tipoIdentificacao: data.tipoIdentificacao || 'BI', // Usar o tipo de identificação ou padrão BI
+      identificacao: identificacao, // Usar o campo identificacao ou bi
       nomeMae: data.nomeMae,
       nomePai: data.nomePai,
       dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
+      genero: data.genero, // Campo para gênero
+      nacionalidade: data.nacionalidade, // Campo para nacionalidade
       estado: data.estado,
-      morada: data.morada,
+      endereco: data.endereco, // Usar endereco ou morada
       telefone: data.telefone,
       email: data.email,
-      cxPostal: data.cxPostal
+      caixaPostal: data.caixaPostal,
+      departamentoResponsavel: data.departamentoResponsavel
     };
   }
   
   // Função para preparar dados para atualização de utente
-  export function prepareUpdateUtenteData(data: UtenteFormData) {
+export function prepareUpdateUtenteData(data: UtenteFormData) {
+    // Determinar qual campo usar para identificacao
+    const identificacao = data.identificacao ;
+    
     return {
       nome: data.nome,
-      morada: data.morada,
+      endereco: data.endereco , // Usar endereco ou morada
       telefone: data.telefone,
       email: data.email,
-      cxPostal: data.cxPostal,
+      caixaPostal: data.caixaPostal,
+      departamentoResponsavel: data.departamentoResponsavel,
       nomeMae: data.nomeMae,
       nomePai: data.nomePai,
       nif: data.nif,
-      bi: data.bi,
-      tipoUtente: data.tipoUtente
+      tipoIdentificacao: data.tipoIdentificacao || 'BI', // Usar o tipo de identificação ou padrão BI
+      identificacao: identificacao, // Usar o campo identificacao ou bi
+      genero: data.genero, // Campo para gênero
+      nacionalidade: data.nacionalidade, // Campo para nacionalidade
+      tipo: data.tipo,
+      dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
+      estado: data.estado
     };
   }
 
