@@ -5,7 +5,7 @@ import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 // Esquema de validação para o formulário de utente
 export const utenteFormSchema = z.object({
     id: z.number().optional(),
-    tipo: z.string().optional(),
+    tipoUtente: z.string().optional(),
     nome: z.string().optional(),
     numero: z.string().optional(),
     nif: z.string().optional(),
@@ -21,7 +21,8 @@ export const utenteFormSchema = z.object({
     telefone: z.string().optional(),
     email: z.string().optional(),
     caixaPostal: z.string().optional(),
-    departamentoResponsavel: z.string().optional()
+    departamentoResponsavel: z.string().optional(),
+    telemovel: z.string().optional()
   });
   
   // Tipo derivado do esquema
@@ -31,7 +32,7 @@ export const utenteFormSchema = z.object({
   // Valores iniciais para o formulário
 export const initialUtenteForm: UtenteFormData = {
     id: undefined,
-    tipo: "",
+    tipoUtente: "",
     nome: "",
     numero: "",
     nif: "",
@@ -47,7 +48,8 @@ export const initialUtenteForm: UtenteFormData = {
     telefone: "",
     email: "",
     caixaPostal: "",
-    departamentoResponsavel: ""
+    departamentoResponsavel: "",
+    telemovel: ""
   };
 
 export async function fetchUtentes(params: {
@@ -178,7 +180,7 @@ export async function fetchUtenteById(id: number) {
 
 // POST: criar novo utente
 export async function createUtente(data: any) {
-    console.log('[LOG] Iniciando criação de utente:', { nome: data.nomeUtente, tipo: data.tipoUtente });
+    console.log('[LOG] Iniciando criação de utente:', { data });
     try {
         const res = await fetch('/api/utente', {
             method: 'POST',
@@ -265,21 +267,21 @@ export function prepareCreateUtenteData(data: UtenteFormData) {
     
     return {
       nome: data.nome,
-      tipo: data.tipo,
+      tipoUtente: data.tipoUtente,
       nif: data.nif,
       tipoIdentificacao: data.tipoIdentificacao || 'BI', // Usar o tipo de identificação ou padrão BI
-      identificacao: identificacao, // Usar o campo identificacao ou bi
-      nomeMae: data.nomeMae,
-      nomePai: data.nomePai,
+      identificacao: identificacao || null, // Usar o campo identificacao ou bi
+      nomeMae: data.nomeMae || null,
+      nomePai: data.nomePai || null,
       dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
-      genero: data.genero, // Campo para gênero
-      nacionalidade: data.nacionalidade, // Campo para nacionalidade
-      estado: data.estado,
-      endereco: data.endereco, // Usar endereco ou morada
+      genero: data.genero || 'NA', // Enviar null quando o campo estiver vazio
+      nacionalidade: data.nacionalidade || null, // Campo para nacionalidade
+      endereco: data.endereco || null, // Usar endereco ou morada
       telefone: data.telefone,
       email: data.email,
-      caixaPostal: data.caixaPostal,
-      departamentoResponsavel: data.departamentoResponsavel
+      caixaPostal: data.caixaPostal || null,
+      departamentoResponsavel: data.departamentoResponsavel || null,
+      telemovel: data.telemovel || null
     };
   }
   
@@ -290,21 +292,22 @@ export function prepareUpdateUtenteData(data: UtenteFormData) {
     
     return {
       nome: data.nome,
-      endereco: data.endereco , // Usar endereco ou morada
+      endereco: data.endereco || null, // Usar endereco ou morada
       telefone: data.telefone,
       email: data.email,
-      caixaPostal: data.caixaPostal,
-      departamentoResponsavel: data.departamentoResponsavel,
-      nomeMae: data.nomeMae,
-      nomePai: data.nomePai,
+      caixaPostal: data.caixaPostal || null,
+      departamentoResponsavel: data.departamentoResponsavel || null,
+      nomeMae: data.nomeMae || null,
+      nomePai: data.nomePai || null,
       nif: data.nif,
       tipoIdentificacao: data.tipoIdentificacao || 'BI', // Usar o tipo de identificação ou padrão BI
-      identificacao: identificacao, // Usar o campo identificacao ou bi
-      genero: data.genero, // Campo para gênero
-      nacionalidade: data.nacionalidade, // Campo para nacionalidade
-      tipo: data.tipo,
+      identificacao: identificacao || null, // Usar o campo identificacao ou bi
+      genero: data.genero || 'NA', // Enviar null quando o campo estiver vazio
+      nacionalidade: data.nacionalidade || null, // Campo para nacionalidade
+      tipoUtente: data.tipoUtente,
       dataNascimento: data.dataNascimento ? data.dataNascimento.toISOString().split('T')[0] : null,
-      estado: data.estado
+      estado: data.estado || 'ATIVO',
+      telemovel: data.telemovel || null
     };
   }
 

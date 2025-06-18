@@ -37,21 +37,21 @@ export default function PageNovoutenteComponent() {
 function NovoUtenteContent() {
 
   const form1 = z.object({
-    tipoUtente: z.string().optional(),
-    nome: z.string().optional(),
-    nif: z.string().optional(),
-    tipoIdentificacao: z.string().optional(),
-    identificacao: z.string().optional(),
-    nomeMae: z.string().optional(),
-    nomePai: z.string().optional(),
-    dataNascimento: z.date().optional(),
-    genero: z.string().optional(),
-    nacionalidade: z.string().optional(),
-    endereco: z.string().optional(),
-    telefone: z.string().optional(),
-    email: z.string().optional(),
-    caixaPostal: z.string().optional(),
-    departamentoResponsavel: z.string().optional(),
+    tipoUtente: z.string().min(1, "Tipo de Utente é obrigatório"),
+    nome: z.string().min(1, "Nome Completo é obrigatório"),
+    nif: z.string().min(1, "NIF é obrigatório"),
+    tipoIdentificacao: z.string().min(1, "Tipo de Identificação é obrigatório"),
+    identificacao: z.string().min(1, "Identificação é obrigatória"),
+    nomeMae: z.string().optional().or(z.literal('')),
+    nomePai: z.string().optional().or(z.literal('')),
+    dataNascimento: z.date().optional().nullable(),
+    genero: z.string().optional().or(z.literal('')),
+    nacionalidade: z.string().optional().or(z.literal('')),
+    endereco: z.string().optional().or(z.literal('')),
+    telefone: z.string().min(1, "Telefone é obrigatório"),
+    email: z.string().min(1, "Email é obrigatório"),
+    caixaPostal: z.string().optional().or(z.literal('')),
+    departamentoResponsavel: z.string().optional().or(z.literal('')),
   })
 
   type Form1ZodType = typeof form1;
@@ -165,7 +165,10 @@ function NovoUtenteContent() {
     };
   }, [searchParams, initForm1, utenteService]); // Dependências do useEffect
 
-  const handleSubmit = async (data: UtenteFormData) => {
+  // Definir o tipo para o formulário local
+  type Form1Data = z.infer<typeof form1>;
+
+  const handleSubmit = async (data: Form1Data) => {
     console.log('[LOG-PAGE] Dados do formulário para envio:', data);
     setLoading(true);
 
@@ -177,20 +180,26 @@ function NovoUtenteContent() {
       const { handleUtenteSubmit } = await utenteService();
 
       // Utilizar a função do serviço para processar a submissão
-      const result = await handleUtenteSubmit(data, id);
+      const result = await handleUtenteSubmit(data as UtenteFormData, id);
 
       // Mostrar notificação de sucesso
       toast.igrpToast({
         title: isEditMode ? "Utente atualizado com sucesso!" : "Utente criado com sucesso!",
-        description: `${data.nome} foi ${isEditMode ? 'atualizado' : 'registrado'} no sistema.`,
+        description: `${data.nome} foi ${isEditMode ? 'atualizado' : 'registrado'} no sistema com sucesso. Os dados foram salvos corretamente.`,
         type: "success",
         duration: 5000,
+        position: "top-right",
+        style: {
+          background: "#f0f9ff",
+          border: "1px solid #0ea5e9",
+          borderRadius: "8px",
+        }
       });
 
       // Redirecionar para a lista após sucesso
       setTimeout(() => {
         router.push("listautente");
-      }, 1500);
+      }, 2000);
 
       return result;
     } catch (error) {
@@ -199,10 +208,22 @@ function NovoUtenteContent() {
       // Mostrar notificação de erro
       toast.igrpToast({
         title: "Erro ao salvar utente",
-        description: "Ocorreu um erro ao processar a operação. Por favor, tente novamente.",
+        description: "Ocorreu um erro ao processar a operação. Por favor, verifique os dados e tente novamente.",
         type: "error",
         duration: 5000,
+        position: "top-right",
+        style: {
+          background: "#fff1f2",
+          border: "1px solid #e11d48",
+          borderRadius: "8px",
+        }
       });
+
+      // Garantir que os dados do formulário sejam mantidos
+      if (formform1Ref.current) {
+        // Restaurar os valores do formulário para os valores atuais
+        formform1Ref.current.reset(data);
+      }
 
       // Não lançar o erro para evitar que o formulário seja reiniciado
       // e os dados sejam perdidos
@@ -259,7 +280,7 @@ function NovoUtenteContent() {
         ) : (
           <IGRPForm
             schema={form1}
-            validationMode="onBlur"
+            validationMode="onSubmit"
             gridClassName="flex flex-col"
             formRef={formform1Ref}
             className={cn()}

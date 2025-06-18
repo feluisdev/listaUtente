@@ -13,12 +13,12 @@ const nomesUtente = [
     "Sofia Pinto",
 ];
 
-const tiposUtente = ["Cidadão", "Servidor Público", "Empresa"];
+const tiposUtente = ["CIDADAO", "sERV_PUBLICO", "EEMPRESA"];
 
 const API_UTENTES_URL = process.env.NEXT_PUBLIC_API_URL_UTENTE + '/utentes/v1';
 
 function gerarNIF(tipo: string): string {
-    const prefixo = tipo === "Cidadão" ? "1" : "2";
+    const prefixo = tipo === "CIDADAO" ? "1" : "2";
     const randomRest = Math.floor(10000000 + Math.random() * 90000000); // 8 dígitos
     return prefixo + randomRest.toString();
 }
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
                 id: data.id,
                 numero: data.numero, // Mapeando 'numero' do backend para 'nrUtente' no frontend
                 estado: data.estado,
-                tipo: data.tipoUtente,
+                tipoUtente: data.tipoUtente,
                 nome: data.nome,
                 nif: data.nif,
                 dataNascimento: data.dataNascimento,
@@ -71,7 +71,8 @@ export async function GET(req: NextRequest) {
                 nomePai: data.nomePai,
                 departamentoResponsavel: data.departamentoResponsavel,
                 genero: data.genero,
-                nacionalidade: data.nacionalidade
+                nacionalidade: data.nacionalidade,
+                telemovel: data.telemovel
             };
             
             return NextResponse.json(utente);
@@ -154,7 +155,7 @@ export async function POST(req: NextRequest) {
     console.log('[API-LOG] POST criar novo utente');
     try {
         const data = await req.json();
-        console.log('[API-LOG] Dados do novo utente:', { nome: data.nome, tipo: data.tipoUtente });
+        console.log('[API-LOG] Dados do novo utente:', { data });
         
         const res = await fetch(API_UTENTES_URL, {
             method: 'POST',
