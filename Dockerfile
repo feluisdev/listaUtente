@@ -1,40 +1,27 @@
-FROM node:18-alpine AS base
-
-RUN apk add --no-cache libc6-compat
-
+# ---------- base image ----------
+FROM node:22-alpine AS base
+RUN apk add --no-cache libc6-compat && corepack enable
+ENV PNPM_HOME=/pnpm
+ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /app
 
+# ---------- deps layer ----------
 FROM base AS deps
+COPY package.json pnpm-lock.yaml .npmrc ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --frozen-lockfile
 
-COPY package.json .npmrc ./
-
-RUN npm install
-
+# ---------- build layer ----------
 FROM base AS build
-
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-
+COPY --from=deps /app .
 COPY . .
+RUN pnpm build
 
-RUN npm run build
-
-FROM node:18-alpine AS production
-
+# ---------- production image ----------
+FROM base AS production
 ENV NODE_ENV=production
-
-WORKDIR /app
-
-COPY --from=build /app/.next /app/.next  
-
-COPY --from=deps /app/package*.json ./
-
-RUN npm install --only=production 
-
-EXPOSE 80 
-
-RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
-USER nextjs
-
-CMD ["npm", "start"] 
+COPY --from=build /app/.next /app/.next
+COPY --from=deps  /app/node_modules /app/node_modules
+COPY package.json .npmrc ./
+EXPOSE 3000
+CMD ["pnpm", "start"]

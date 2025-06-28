@@ -1,0 +1,714 @@
+{
+    "type": "component",
+    "scope": "page",
+    "pagePath": "listautente",
+    "pageName": "listaUtente",
+    "description": "utenteForm",
+    "name": "utenteForm",
+    "id": "ghjq70rz2k",
+    "args": [],
+    "components": {
+        "id": "component_yvxq1f",
+        "componentName": "component",
+        "label": "component",
+        "properties": {
+            "commonProperties": {}
+        },
+        "children": [                    {
+            "id": "form_3ufmy9",
+            "tag": "form1",
+            "componentName": "form",
+            "label": "Form",
+            "type": "group",
+            "children": [
+                {
+                    "id": "card_yiaxc4",
+                    "tag": "card1",
+                    "componentName": "card",
+                    "label": "Card",
+                    "type": "group",
+                    "children": [
+                        {
+                            "id": "cardheader_mfi3kh",
+                            "tag": "cardHeader1",
+                            "componentName": "cardHeader",
+                            "label": "Card Header",
+                            "children": [
+                                {
+                                    "id": "headline_wz82vq",
+                                    "tag": "headline1",
+                                    "componentName": "headline",
+                                    "label": "Headline",
+                                    "type": "group",
+                                    "children": [],
+                                    "interactions": {},
+                                    "allowTypes": false,
+                                    "data": {},
+                                    "properties": {
+                                        "title": "Informações do Utente",
+                                        "description": "",
+                                        "variant": "h6",
+                                        "commonProperties": {}
+                                    },
+                                    "childProperties": {}
+                                }
+                            ],
+                            "interactions": {},
+                            "allowTypes": false,
+                            "data": {},
+                            "properties": {
+                                "commonProperties": {}
+                            }
+                        },
+                        {
+                            "id": "cardcontent_hgwvx2",
+                            "tag": "cardContent1",
+                            "componentName": "cardContent",
+                            "label": "Card Content",
+                            "children": [
+                                {
+                                    "id": "grid_c8c73v",
+                                    "tag": "grid1",
+                                    "componentName": "grid",
+                                    "label": "Grid",
+                                    "type": "group",
+                                    "children": [
+                                        {
+                                            "id": "combobox_w037py",
+                                            "tag": "tipoUtente",
+                                            "componentName": "combobox",
+                                            "label": "Combobox",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {},
+                                                "options": {
+                                                    "state": {
+                                                        "id": "",
+                                                        "type": "IGRPOptionsProps[]",
+                                                        "name": "selectcombobox1Options",
+                                                        "defaultValue": "[]",
+                                                        "imports": []
+                                                    }
+                                                }
+                                            },
+                                            "properties": {
+                                                "label": "Tipo De Utente",
+                                                "variant": "single",
+                                                "placeholder": "Select an option...",
+                                                "selectLabel": "No option found",
+                                                "showSearch": true,
+                                                "gridSize": "full",
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {},
+                                                "required": true
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_uagemt",
+                                            "tag": "nome",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Nome Completo",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": true,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_trworp",
+                                            "tag": "nif",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "NIF",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": true,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "combobox_tipo_id",
+                                            "tag": "tipoIdentificacao",
+                                            "componentName": "combobox",
+                                            "label": "Combobox",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {},
+                                                "options": {
+                                                    "state": {
+                                                        "id": "",
+                                                        "type": "IGRPOptionsProps[]",
+                                                        "name": "tipoIdentificacaoOptions",
+                                                        "defaultValue": "[]",
+                                                        "imports": []
+                                                    }
+                                                }
+                                            },
+                                            "properties": {
+                                                "label": "Tipo de Identificação",
+                                                "variant": "single",
+                                                "placeholder": "Selecione uma opção...",
+                                                "selectLabel": "Nenhuma opção encontrada",
+                                                "showSearch": true,
+                                                "gridSize": "full",
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {},
+                                                "required": true
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_1g3l8x",
+                                            "tag": "identificacao",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Identificação",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": true,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_9ysuk3",
+                                            "tag": "nome_mae",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Nome da Mãe",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": false,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_niv7q2",
+                                            "tag": "nomePai",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Nome do Pai",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": false,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputdatepicker_znkkec",
+                                            "tag": "dataNascimento",
+                                            "componentName": "inputDatePicker",
+                                            "label": "Date Picker",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onDateChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "date": {}
+                                            },
+                                            "properties": {
+                                                "label": "Data de Nascimento",
+                                                "placeholder": "Please select a date...",
+                                                "helperText": "",
+                                                "disabled": false,
+                                                "required": false,
+                                                "gridSize": "full",
+                                                "dateFormat": "dd/MM/yyyy",
+                                                "today": "2025-01-01",
+                                                "startDate": "1900-01-01",
+                                                "endDate": "2099-12-31",
+                                                "defaultMonth": "2025-01-01",
+                                                "startMonth": "2025-01-01",
+                                                "month": "2025-01-01",
+                                                "endMonth": "2025-12-31",
+                                                "numberOfMonths": "1",
+                                                "weekStartsOn": 0,
+                                                "pagedNavigation": false,
+                                                "reverseMonths": false,
+                                                "hideNavigation": false,
+                                                "disableNavigation": false,
+                                                "fixedWeeks": false,
+                                                "hideWeekdays": false,
+                                                "showOutsideDays": false,
+                                                "showWeekNumber": false,
+                                                "animate": false,
+                                                "broadcastCalendar": false,
+                                                "ISOWeek": false,
+                                                "captionLayout": "label",
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "combobox_genero",
+                                            "tag": "genero",
+                                            "componentName": "combobox",
+                                            "label": "Combobox",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {},
+                                                "options": {
+                                                    "state": {
+                                                        "id": "",
+                                                        "type": "IGRPOptionsProps[]",
+                                                        "name": "generoOptions",
+                                                        "defaultValue": "[]",
+                                                        "imports": []
+                                                    }
+                                                }
+                                            },
+                                            "properties": {
+                                                "label": "Gênero",
+                                                "variant": "single",
+                                                "placeholder": "Selecione uma opção...",
+                                                "selectLabel": "Nenhuma opção encontrada",
+                                                "showSearch": true,
+                                                "gridSize": "full",
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {},
+                                                "required": false
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_nacionalidade",
+                                            "tag": "nacionalidade",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Nacionalidade",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": false,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_xxt81r",
+                                            "tag": "endereco",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Endereço",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": false,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_mvqpf2",
+                                            "tag": "telefone",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Telefone",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": true,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_zeynhn",
+                                            "tag": "email",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Email",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": true,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_sgre9n",
+                                            "tag": "cxPostal",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Caixa Postal",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": false,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        },
+                                        {
+                                            "id": "inputtext_depto",
+                                            "tag": "departamentoResponsavel",
+                                            "componentName": "inputText",
+                                            "label": "Input Text",
+                                            "type": "group",
+                                            "children": [],
+                                            "interactions": {
+                                                "onChange": {
+                                                    "type": "function"
+                                                }
+                                            },
+                                            "allowTypes": false,
+                                            "data": {
+                                                "value": {}
+                                            },
+                                            "properties": {
+                                                "label": "Departamento Responsável",
+                                                "placeholder": "",
+                                                "helperText": "",
+                                                "iconProperties": {
+                                                    "showIcon": false
+                                                },
+                                                "disabled": false,
+                                                "required": false,
+                                                "dataProperties": {
+                                                    "isVirtual": false,
+                                                    "isType": true
+                                                },
+                                                "commonProperties": {}
+                                            },
+                                            "childProperties": {}
+                                        }
+                                    ],
+                                    "interactions": {},
+                                    "allowTypes": false,
+                                    "data": {},
+                                    "properties": {
+                                        "gap": 4,
+                                        "variant": "cols4",
+                                        "commonProperties": {}
+                                    },
+                                    "childProperties": {
+                                        "className": "col-span-1"
+                                    }
+                                }
+                            ],
+                            "interactions": {},
+                            "allowTypes": false,
+                            "data": {},
+                            "properties": {
+                                "spaceX": "3",
+                                "spaceY": "3",
+                                "commonProperties": {}
+                            },
+                            "childProperties": {}
+                        },
+                        {
+                            "id": "cardfooter_zrgmqr",
+                            "tag": "cardFooter1",
+                            "componentName": "cardFooter",
+                            "label": "Card Footer",
+                            "children": [],
+                            "interactions": {},
+                            "allowTypes": false,
+                            "data": {},
+                            "properties": {
+                                "commonProperties": {}
+                            }
+                        }
+                    ],
+                    "interactions": {},
+                    "allowTypes": false,
+                    "data": {},
+                    "properties": {
+                        "commonProperties": {}
+                    }
+                }
+            ],
+            "interactions": {
+                "onSubmit": {
+                    "type": "function",
+                    "function": {
+                        "fnCustomCode": {
+                            "imports": [
+                                {
+                                    "namespace": "import {createUtente} from '@/app/(myapp)/functions/services/utente-service'",
+                                    "id": "lxoau91fpa"
+                                }
+                            ]
+                        },
+                        "fnName": "createUtente"
+                    }
+                }
+            },
+            "allowTypes": true,
+            "data": {
+                "defaultValues": {
+                    "state": {
+                        "id": "",
+                        "type": "z.infer<any>",
+                        "name": "contentFormform1",
+                        "defaultValue": "initForm1",
+                        "imports": []
+                    }
+                }
+            },
+            "properties": {
+                "validationMode": "onBlur",
+                "gridClassName": "flex flex-col",
+                "resetAfterSubmit": false,
+                "commonProperties": {}
+            },
+            "childProperties": {},
+            "dataType": "form1"
+        }],
+        "tag": "component1",
+        "data": {},
+        "interactions": {
+            "onLoad": {
+                "type": "function",
+                "function": {
+                    "type": "function"
+                },
+                "action": {}
+            }
+        }
+    },
+    "functions": [],
+    "types": [],
+    "states": [],
+    "imports": []
+}
