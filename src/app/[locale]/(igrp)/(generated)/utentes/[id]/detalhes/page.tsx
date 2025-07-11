@@ -6,21 +6,39 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useRef } from 'react';
+import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { 
   IGRPPageHeader,
 	IGRPStatusBanner,
 	IGRPInfoCard,
 	IGRPInfoSection,
-	IGRPInfoItem 
+	IGRPInfoItem,
+	IGRPHeadline,
+	IGRPDataTable,
+	IGRPDataTableCellBadge 
 } from "@igrp/igrp-framework-react-design-system";
 import {useFetchUtente} from '@/app/[locale]/(myapp)/functions/services/utente-service'
+import {useFetchServicosAssociados} from '@/app/[locale]/(myapp)/functions/services/utente-service'
 
 
-export default function PageDetalhesutenteComponent() {
+export default function PageDetalhesutenteComponent({ params } : { params: Promise<{ id: string }> } ) {
+
+  const { id } = use(params);
 
   
+  type Table1 = {
+    tipo: string;
+    descricao: string;
+    referencia: string;
+    dataInicio: string;
+    dataFim: string;
+    estado: string;
+}
+
+  const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
   
   
 const [statusBanner1Text, setStatusBanner1Text] = useState<string>(`Status Banner`);
@@ -58,10 +76,21 @@ const [caixaPostal, setCaixaPostal] = useState<string>(`Lorem ipsum dolor sit am
 const [departamentoResponsavel, setDepartamentoResponsavel] = useState<string>(`Lorem ipsum dolor sit amet`);
 
 
-const { data, isLoading } = useFetchUtente();
+const { data, isLoading } = useFetchUtente(id);
+
+const {data: servicos, isLoading:isLoadingServico} = useFetchServicosAssociados(id);
+console.log("servicos",servicos)
+
+useEffect(() => {
+ if (isLoadingServico || !data) return;
+ setContentTabletable1(servicos?.content || [])
+
+},[isLoadingServico])
+
 // Lógica para carregar os dados do utente pelo ID e preencher o formulário
 useEffect(() => {
   if (isLoading || !data) return;
+
 
   setStatusBanner1Text(data?.tipoUtente || '')
   setStatusBanner1BadgeText(data?.estado || '')
@@ -119,7 +148,7 @@ text={ statusBanner1Text }
   variantSection={ `solid` }
   colorSection={ `primary` }
   title={ `Informações Pessoais` }
-  className={ cn('md:col-span-2','',) }
+  className={ cn('lg:col-span-2 md:col-span-2 col-span-1','',) }
   
   sections={
     [
@@ -253,6 +282,88 @@ text={ statusBanner1Text }
       },
 ]
   }
-/></div></div></div>
+/></div>
+<IGRPHeadline
+  name={ `headline1` }
+  title={ `Serviços Associados` }
+description={ undefined }
+variant={ `h6` }
+roleColor={ `solid` }
+color={ `primary` }
+showIcon={ false }
+
+  
+  
+>
+</IGRPHeadline>
+<IGRPDataTable<Table1, Table1>
+  columns={
+    [
+        {
+          header: 'Tipo'
+,accessorKey: 'tipo',
+          cell: ({ row }) => {
+          return row.getValue("tipo")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Descriçāo'
+,accessorKey: 'descricao',
+          cell: ({ row }) => {
+          return row.getValue("descricao")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Referência'
+,accessorKey: 'referencia',
+          cell: ({ row }) => {
+          return row.getValue("referencia")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data Inicio'
+,accessorKey: 'dataInicio',
+          cell: ({ row }) => {
+          return row.getValue("dataInicio")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data Fim'
+,accessorKey: 'dataFim',
+          cell: ({ row }) => {
+          return row.getValue("dataFim")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Estado'
+,accessorKey: 'estado',
+          cell: ({ row }) => {
+          const rowData = row.original;
+
+
+return <IGRPDataTableCellBadge
+  label={ row.original.estado }
+  variant={ `soft` }
+badgeClassName={ `` }
+>
+
+</IGRPDataTableCellBadge>
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+]
+  }
+  clientFilters={
+    [
+    ]
+  }
+  
+  data={ contentTabletable1 }
+/></div></div>
   );
 }

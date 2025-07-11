@@ -2,29 +2,14 @@ import { callApi } from '@/app/[locale]/(myapp)/lib/api-server';
 import { PaginatedResponse, Utente } from '@/app/[locale]/(myapp)/types/global';
 import { NextRequest, NextResponse } from 'next/server';
 
-const nomesUtente = [
-  'João Silva',
-  'Maria Oliveira',
-  'Carlos Santos',
-  'Ana Costa',
-  'Paulo Rocha',
-  'Mariana Sousa',
-  'Tiago Martins',
-  'Inês Ferreira',
-  'Rui Almeida',
-  'Sofia Pinto',
-];
-
-const tiposUtente = ['Cidadão', 'Camara', 'Empresa'];
-
 const API_UTENTES_URL = process.env.NEXT_PUBLIC_API_URL_UTENTE + '/utentes/v1';
 
 export async function GET(req: NextRequest) {
   try {
-
+    const searchParams = req.nextUrl.searchParams;
     const utenteId = req.nextUrl.searchParams.get('utenteId') ?? '';
     if (utenteId) {
-      const res = await callApi<any>(`${API_UTENTES_URL}/${utenteId}`, {
+      const res = await callApi<PaginatedResponse<Utente>>(`${API_UTENTES_URL}/${utenteId}`, {
         method: 'GET',
       });
 
@@ -32,13 +17,13 @@ export async function GET(req: NextRequest) {
     }
 
     const response = await callApi<PaginatedResponse<Utente>>(
-      `${API_UTENTES_URL}`,
+      `${API_UTENTES_URL}?${searchParams.toString()}`,
       {
         method: 'GET',
       },
     );
 
-    return NextResponse.json(response.content || []);
+    return NextResponse.json(response);
   } catch (error: any) {
     console.error('Erro ao buscar utentes:', error);
     return NextResponse.json([]);
@@ -75,10 +60,7 @@ export async function PUT(req: NextRequest) {
     const utenteId = req.nextUrl.searchParams.get('id');
 
     if (!utenteId) {
-      return NextResponse.json(
-        { message: 'ID do utente é obrigatório' },
-        { status: 400 },
-      );
+      return NextResponse.json({ message: 'ID do utente é obrigatório' }, { status: 400 });
     }
 
     const res = await callApi<any>(`${API_UTENTES_URL}/${utenteId}`, {
@@ -100,15 +82,12 @@ export async function PUT(req: NextRequest) {
 }
 
 // DELETE: inativa utente
-export async function DELETE(req: NextRequest) {      
+export async function DELETE(req: NextRequest) {
   try {
     const utenteId = req.nextUrl.searchParams.get('id');
 
     if (!utenteId) {
-      return NextResponse.json(
-        { message: 'ID do utente é obrigatório' },
-        { status: 400 },
-      );
+      return NextResponse.json({ message: 'ID do utente é obrigatório' }, { status: 400 });
     }
 
     const res = await callApi<any>(`${API_UTENTES_URL}/${utenteId}`, {

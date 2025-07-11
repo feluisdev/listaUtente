@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useRef } from 'react';
+import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
@@ -26,12 +26,14 @@ import {
 } from "@igrp/igrp-framework-react-design-system";
 import {getEstado} from '@/app/[locale]/(myapp)/functions/services/config-service'
 import {getTipoUtente} from '@/app/[locale]/(myapp)/functions/services/config-service'
-import {fetchUtentes} from '@/app/[locale]/(myapp)/functions/services/utente-service'
+import {useFetchUtentes} from '@/app/[locale]/(myapp)/functions/services/utente-service'
 import { useRouter } from "next/navigation";
 import {getStatusBadge} from '@/app/[locale]/(myapp)/functions/services/config-service'
+import {deleteUtente} from '@/app/[locale]/(myapp)/functions/services/utente-service'
 
 
 export default function PageUtentesComponent() {
+
 
   
   type Table1 = {
@@ -52,46 +54,47 @@ export default function PageUtentesComponent() {
   const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
   
   
+const [numeroFlt, setNumeroFlt] = useState<string>(``);
+
+const [tpUtenteFlt, setTpUtenteFlt] = useState<string>(``);
+
+const [estadoFlt, setEstadoFlt] = useState<string>(``);
+
+const [nifFlt, setNifFlt] = useState<string>(``);
+
+const [nomeFlt, setNomeFlt] = useState<string>(``);
+
 const router = useRouter()
 
-const [loading, setLoading] = useState(false)
+const { data, stats, isLoading } = useFetchUtentes({
+ tipo: tpUtenteFlt,
+ numeroUtente: numeroFlt,
+ estado: estadoFlt,
+ nome: nomeFlt,
+ nif: nifFlt
+});
+
 useEffect(() => {
-  let isMounted = true; // flag de controle
 
-  const loadData = async () => {    
+  if (isLoading || !data) return
 
-    setLoading(true);      
-    
+  console.log(data)
+
+  setContentTabletable1(data?.content);
+  setStatstatTotalValue(stats?.total ?? 0);
+  setStatstatsCard1Value(stats?.totalCamara ?? 0);
+  setStatstatsCard3Value(stats?.totalEmpresa ?? 0);
+  setStatstatsCard4Value(stats?.totalCidadao ?? 0);
+
+}, [isLoading, data])
+
+useEffect(() => {
+  const loadData = async () => {
     setSelectcomboEstadoOptions(getEstado);
     setSelectcombobox2Options(getTipoUtente);
-    try {
-      const { list, total, options,totalCamara,totalCidadao,totalEmpresa } = await fetchUtentes(); // toda a lógica está aqui
-
-      if (isMounted){
-        setContentTabletable1(list);   
-
-         setStatstatTotalValue(total);
-        setStatstatsCard1Value(totalCamara);
-        setStatstatsCard3Value(totalEmpresa);
-        setStatstatsCard4Value(totalCidadao);    
-
-        /*   setList(data.list);
-          setOptions(data.options);
-          setTotal(data.total);
-          setMessage(data.message); */
-      }
-    }  catch (e) {
-      if (isMounted) console.error(e);
-    } finally {
-      if (isMounted) setLoading(false);
-    }
   };
 
   loadData();
-
-  return () => {
-    isMounted = false; // cleanup quando o componente for desmontado
-  };
 }, []);
 
 function goTonovoUtente (row?: any): void {
@@ -103,6 +106,7 @@ function goTonovoUtente (row?: any): void {
 <div className={ cn('page','space-y-6',)}    >
 	<div className={ cn('section',' space-x-3 space-y-3',)}    >
 	<IGRPPageHeader
+  name={ `pageHeader1` }
   title={ `Gestão de Utentes` }
   description={ `Gerir todos os utentes do sistema` }
   variant={ `h3` }
@@ -227,53 +231,53 @@ iconName={ `CornerDownRight` }
 
 gridSize={ `full` }
   className={ cn('col-span-1',) }
-  
+  onChange={ (value)=>{setTpUtenteFlt(value as string)
+} }
   options={ selectcombobox2Options }
 >
 </IGRPCombobox>
 <IGRPInputText
   name={ `inputText2` }
   label={ `Numero Utente` }
-placeholder={ undefined }
-helperText={ undefined }
 showIcon={ false }
-disabled={ false }
 required={ false }
 
 
   className={ cn('col-span-1',) }
-  
-  value={ undefined }
+  onChange={ (e)=>setNumeroFlt(e.target.value) }
+  value={ numeroFlt }
 >
 </IGRPInputText>
 <IGRPInputText
   name={ `inputText1` }
   label={ `Nome` }
-placeholder={ undefined }
-helperText={ undefined }
 showIcon={ false }
-disabled={ false }
 required={ false }
 
 
+placeholder={ undefined }
+helperText={ undefined }
+disabled={ false }
   className={ cn('col-span-1',) }
-  
-  value={ undefined }
+  onChange={ (e)=>setNomeFlt(e.target.value)
+ }
+  value={ nomeFlt }
 >
 </IGRPInputText>
 <IGRPInputText
   name={ `inputText3` }
   label={ `NIF` }
-placeholder={ undefined }
-helperText={ undefined }
 showIcon={ false }
-disabled={ false }
 required={ false }
 
 
+placeholder={ undefined }
+helperText={ undefined }
+disabled={ false }
   className={ cn('col-span-1',) }
-  
-  value={ undefined }
+  onChange={ (e) => setNifFlt(e.target.value)
+ }
+  value={ nifFlt }
 >
 </IGRPInputText>
 <IGRPCombobox
@@ -281,6 +285,7 @@ required={ false }
   label={ `Estado` }
 variant={ `single` }
 placeholder={ `Select an option...` }
+required={ undefined }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }
@@ -288,9 +293,12 @@ iconName={ `CornerDownRight` }
 
 
 gridSize={ `full` }
+
   className={ cn('col-span-1',) }
-  
+  onChange={ setEstadoFlt
+ }
   options={ selectcomboEstadoOptions }
+value={ estadoFlt }
 >
 </IGRPCombobox></div>
 <div className={ cn('flex','flex-1','flex flex-row flex-nowrap items-stretch justify-end gap-2',)}    >
@@ -376,20 +384,20 @@ return (
       {
         component: IGRPDataTableDropdownMenuAlert,
         props: {
-          modalTitle: `New Alert`,labelTrigger: `Inativar`,          showIcon: true,showCancel: true,labelCancel: `Cancel`,variantCancel: `default`,showConfirm: true,labelConfirm: `Confirm`,variantConfirm: `default`,          onClickConfirm: (e) => {},
-          children: <>A new alert triggered</>
+          modalTitle: `Inativar`,labelTrigger: `Inativar`,          showIcon: true,showCancel: true,labelCancel: `Cancel`,variantCancel: `default`,showConfirm: true,labelConfirm: `Confirm`,variantConfirm: `default`,          onClickConfirm: ()=>{deleteUtente(rowData.id)},
+          children: <>Deseja inativar o utente?</>
 }
       },
       {
         component: IGRPDataTableDropdownMenuLink,
         props: {
-          labelTrigger: `Editar`,icon: `UserPen`,href: `/utentes/${row.original.id}/edit`,          showIcon: true,          action: (e) => {},
+          labelTrigger: `Editar`,icon: `UserPen`,href: `/utentes/${row.original.id}/edit`,          showIcon: true,          
 }
       },
       {
         component: IGRPDataTableDropdownMenuLink,
         props: {
-          labelTrigger: `Detalhes`,icon: `UserCog`,href: `/utentes/${row.original.id}/detalhes`,          showIcon: true,          action: (e) => {},
+          labelTrigger: `Detalhes`,icon: `UserCog`,href: `/utentes/${row.original.id}/detalhes`,          showIcon: true,          
 }
       },
 ]
