@@ -1,0 +1,9 @@
+services:
+  utentes-ui-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      
+    image: utentes-ui-local
+    ports:
+      - "3002:3000"

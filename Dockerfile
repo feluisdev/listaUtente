@@ -1,40 +1,55 @@
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
 
+FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-FROM base AS deps
+# Copy lockfiles AND .npmrc
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc ./
 
-COPY package.json .npmrc ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-RUN npm install
 
-FROM base AS build
-
+FROM base AS builder
 WORKDIR /app
+
 
 COPY --from=deps /app/node_modules ./node_modules
-
 COPY . .
 
-RUN npm run build
+COPY .env.local .env.production
 
-FROM node:18-alpine AS production
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-ENV NODE_ENV=production
-
+FROM base AS runner
 WORKDIR /app
 
-COPY --from=build /app/.next /app/.next  
+#ENV NODE_ENV=local
 
-COPY --from=deps /app/package*.json ./
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
-RUN npm install --only=production 
+# COPY --from=builder /app/public ./public
 
-EXPOSE 80 
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 USER nextjs
 
-CMD ["npm", "start"] 
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]

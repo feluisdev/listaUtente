@@ -12,7 +12,10 @@
   "dependencies": {
     "@hookform/resolvers": "5.0.1",
     "@igrp/igrp-framework-react-design-system": "latest",
+    "@tanstack/react-query": "^5.81.5",
     "@tanstack/react-table": "8.21.3",
+    "@types/js-cookie": "^3.0.6",
+    "js-cookie": "^3.0.5",
     "next": "15.3.2",
     "next-auth": "^4.24.11",
     "next-intl": "^4.1.0",
