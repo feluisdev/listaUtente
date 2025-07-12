@@ -58,11 +58,11 @@ const [numeroFlt, setNumeroFlt] = useState<string>(``);
 
 const [tpUtenteFlt, setTpUtenteFlt] = useState<string>(``);
 
-const [estadoFlt, setEstadoFlt] = useState<string>(``);
+const [estadoFlt, setEstadoFlt] = useState<string>(`any`);
 
-const [nifFlt, setNifFlt] = useState<string>(``);
+const [nifFlt, setNifFlt] = useState<string>(`any`);
 
-const [nomeFlt, setNomeFlt] = useState<string>(``);
+const [nomeFlt, setNomeFlt] = useState<string>(`any`);
 
 const router = useRouter()
 
@@ -223,6 +223,7 @@ itemPlacement={ `start` }
   label={ `Tipo Utente` }
 variant={ `single` }
 placeholder={ `Select an option...` }
+required={ undefined }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }
@@ -230,6 +231,7 @@ iconName={ `CornerDownRight` }
 
 
 gridSize={ `full` }
+
   className={ cn('col-span-1',) }
   onChange={ (value)=>{setTpUtenteFlt(value as string)
 } }
@@ -295,7 +297,7 @@ iconName={ `CornerDownRight` }
 gridSize={ `full` }
 
   className={ cn('col-span-1',) }
-  onChange={ setEstadoFlt
+  onChange={ (value)=>setEstadoFlt(value as string)
  }
   options={ selectcomboEstadoOptions }
 value={ estadoFlt }
