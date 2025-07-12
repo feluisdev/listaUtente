@@ -1,90 +1,108 @@
-import { NextRequest, NextResponse } from "next/server"
-
-const nomesUtente = [
-    "João Silva",
-    "Maria Oliveira",
-    "Carlos Santos",
-    "Ana Costa",
-    "Paulo Rocha",
-    "Mariana Sousa",
-    "Tiago Martins",
-    "Inês Ferreira",
-    "Rui Almeida",
-    "Sofia Pinto",
-];
-
-const tiposUtente = ["Cidadão", "Camara", "Empresa"];
+import { callApi } from '@/app/[locale]/(myapp)/lib/api-server';
+import { PaginatedResponse, Utente } from '@/app/[locale]/(myapp)/types/global';
+import { NextRequest, NextResponse } from 'next/server';
 
 const API_UTENTES_URL = process.env.NEXT_PUBLIC_API_URL_UTENTE + '/utentes/v1';
 
-function gerarNIF(tipo: string): string {
-    const prefixo = tipo === "Cidadão" ? "1" : "2";
-    const randomRest = Math.floor(10000000 + Math.random() * 90000000); // 8 dígitos
-    return prefixo + randomRest.toString();
-}
-
-function generateFakeUtente(id: number) {
-    const tipoUtente = tiposUtente[Math.floor(Math.random() * tiposUtente.length)];
-    return {
-        id,
-        numeroUtente: `C${Math.floor(10000 + Math.random() * 90000)}`,
-        estado: ['Ativo', 'Inativo'][Math.floor(Math.random() * 2)],
-        tipoUtente: tipoUtente,
-        nomeUtente: nomesUtente[Math.floor(Math.random() * nomesUtente.length)],
-        nif: gerarNIF(tipoUtente)
-    };
-}
-
 export async function GET(req: NextRequest) {
-    try {
-        const res = await fetch(API_UTENTES_URL);
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    const utenteId = req.nextUrl.searchParams.get('utenteId') ?? '';
+    if (utenteId) {
+      const res = await callApi<PaginatedResponse<Utente>>(`${API_UTENTES_URL}/${utenteId}`, {
+        method: 'GET',
+      });
 
-        if (!res.ok) {
-            throw new Error(`Erro chamada API: ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        const utentes = data.content.map((item: any) => ({
-            id: item.id,
-            numeroUtente: item.nrUtente,
-            estado: item.estado,
-            tipoUtente: item.tipoUtente,
-            nomeUtente: item.nome,
-            nif: item.nif,
-        }));
-
-        return NextResponse.json(utentes);
-
-    } catch (error: any) {
-        console.error("Erro ao buscar utentes:", error);
-
-        // FALLBACK
-        const fakeUtentes = Array.from({ length: 20 }, (_, i) =>
-            generateFakeUtente(i + 1)
-        );
-
-        return NextResponse.json(fakeUtentes);
+      return NextResponse.json(res);
     }
+
+    const response = await callApi<PaginatedResponse<Utente>>(
+      `${API_UTENTES_URL}?${searchParams.toString()}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    return NextResponse.json(response);
+  } catch (error: any) {
+    console.error('Erro ao buscar utentes:', error);
+    return NextResponse.json([]);
+  }
 }
 
 // POST: cria novo utente
 export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
 
-    const data = await req.json();
-
-    console.log('data:: ', data)
-    const res = await fetch(API_UTENTES_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+    const res = await callApi<any>(API_UTENTES_URL, {
+      method: 'POST',
+      body: JSON.stringify(body),
     });
 
+    return NextResponse.json(res, { status: 201 });
+  } catch (error: any) {
+    console.error('Erro ao criar utente:', error);
+    return NextResponse.json(
+      {
+        message: error.details || error.message,
+        title: error.title || 'Erro',
+      },
+      { status: 500 },
+    );
+  }
+}
 
-    console.log('res:: ', res)
-    const newUtente = await res.json();
+// PUT: atualiza utente existente
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const utenteId = req.nextUrl.searchParams.get('id');
 
-    console.log('newUtente:: ', newUtente)
+    if (!utenteId) {
+      return NextResponse.json({ message: 'ID do utente é obrigatório' }, { status: 400 });
+    }
 
-    return NextResponse.json(newUtente, { status: 201 });
+    const res = await callApi<any>(`${API_UTENTES_URL}/${utenteId}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+
+    return NextResponse.json(res, { status: 200 });
+  } catch (error: any) {
+    console.error('Erro ao atualizar utente:', error);
+    return NextResponse.json(
+      {
+        message: error.details || error.message,
+        title: error.title || 'Erro',
+      },
+      { status: 500 },
+    );
+  }
+}
+
+// DELETE: inativa utente
+export async function DELETE(req: NextRequest) {
+  try {
+    const utenteId = req.nextUrl.searchParams.get('id');
+
+    if (!utenteId) {
+      return NextResponse.json({ message: 'ID do utente é obrigatório' }, { status: 400 });
+    }
+
+    const res = await callApi<any>(`${API_UTENTES_URL}/${utenteId}`, {
+      method: 'DELETE',
+    });
+
+    return NextResponse.json(res, { status: 200 });
+  } catch (error: any) {
+    console.error('Erro ao inativar utente:', error);
+    return NextResponse.json(
+      {
+        message: error.details || error.message,
+        title: error.title || 'Erro',
+      },
+      { status: 500 },
+    );
+  }
 }
