@@ -35,9 +35,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   setRequestLocale(locale);
   const messages = await getMessages();
 
-  let session
+  let  session = null
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'test') {
     try {
       session = await serverSession()
     } catch (error) {

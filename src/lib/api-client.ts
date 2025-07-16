@@ -8,7 +8,7 @@ interface ExtendedRequestInit extends RequestInit {
 }
 
 export async function callApi<T>(endpoint: string, options: ExtendedRequestInit = {}): Promise<T> {
-  if (process.env.NODE_ENV !== 'production') return null as T;
+  if (process.env.NODE_ENV !== 'test') return null as T;
 
   if (!process.env.APP_MANAGER_API) {
     throw new Error('APP_MANAGER_API is not defined');

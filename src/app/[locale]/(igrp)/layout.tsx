@@ -22,7 +22,7 @@ export default function LocaleLayout({ children }: Readonly<{ children: React.Re
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      if (process.env.NODE_ENV === 'production') {
+      if (process.env.NODE_ENV === 'test') {
         const encodedPath = encodeURIComponent(pathname || '/');
         console.warn("Session is unauthenticated. Redirecting to login.");
         router.push(`/login?callbackUrl=${encodedPath}`);
@@ -33,7 +33,7 @@ export default function LocaleLayout({ children }: Readonly<{ children: React.Re
   const logoutPage = process.env.NEXT_PUBLIC_LOGOUT || '';
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'test') {
       if (status === "loading") return;
 
       if (!session || session.error === "RefreshAccessTokenError") {

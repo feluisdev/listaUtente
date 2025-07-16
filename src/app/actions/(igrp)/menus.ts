@@ -8,7 +8,7 @@ async function callApi<T>(
   endpoint: string, 
   options: RequestInit = {}
 ): Promise<T> {
-  if (process.env.NODE_ENV !== "production") return null as T
+  if (process.env.NODE_ENV !== "test") return null as T
 
   const API_URL = process.env.NEXT_PUBLIC_APP_MANAGER_API ?? ''
   const session = await serverSession()
