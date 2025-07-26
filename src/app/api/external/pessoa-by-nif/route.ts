@@ -20,7 +20,9 @@ export async function GET(req: NextRequest) {
     const response = await callApi(`${EXTERNAL_API_URL}/getPessoaByNif?NIF=${nif}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer Token: ${API_TOKEN}`,
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     });
     console.log(response);
@@ -31,3 +33,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Erro ao buscar pessoa por NIF' }, { status: 500 });
   }
 } 
+

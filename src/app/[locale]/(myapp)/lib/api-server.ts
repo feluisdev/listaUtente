@@ -1,8 +1,5 @@
 'use server';
 
-import { serverSession } from '@/actions/(igrp)/auth';
-import { redirect } from 'next/navigation';
-
 export interface ErrorResponse extends Error {
   title: string;
   status: number;
@@ -16,20 +13,7 @@ interface ExtendedRequestInit extends RequestInit {
 
 export async function callApi<T>(endpoint: string, options: ExtendedRequestInit = {}): Promise<T> {
     console.log({ endpoint, options });
-   if (process.env.NODE_ENV !== 'test') return null as T;
-
-  if (!process.env.APP_MANAGER_API) {
-    throw new Error('APP_MANAGER_API is not defined');
-  }
-
-  const API_URL = process.env.APP_MANAGER_API;
-  const session = await serverSession();
-
-  if (!session?.accessToken) {
-    redirect('/login');
-  }
-
-  const url = `${API_URL}${endpoint}`; 
+ 
 
   const baseHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
