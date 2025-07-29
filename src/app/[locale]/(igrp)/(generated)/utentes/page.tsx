@@ -54,15 +54,17 @@ export default function PageUtentesComponent() {
   const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
   
   
-const [numeroFlt, setNumeroFlt] = useState<string>(``);
+const [numeroFlt, setNumeroFlt] = useState<any>(undefined);
 
-const [tpUtenteFlt, setTpUtenteFlt] = useState<string>(``);
+const [tpUtenteFlt, setTpUtenteFlt] = useState<any>(undefined);
 
-const [estadoFlt, setEstadoFlt] = useState<string>(`any`);
+const [estadoFlt, setEstadoFlt] = useState<any>(undefined);
 
-const [nifFlt, setNifFlt] = useState<string>(`any`);
+const [nifFlt, setNifFlt] = useState<any>(undefined);
 
-const [nomeFlt, setNomeFlt] = useState<string>(`any`);
+const [nomeFlt, setNomeFlt] = useState<any>(undefined);
+
+const { igrpToast } = useIGRPToast()
 
 const router = useRouter()
 
@@ -223,7 +225,6 @@ itemPlacement={ `start` }
   label={ `Tipo Utente` }
 variant={ `single` }
 placeholder={ `Select an option...` }
-required={ undefined }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }
@@ -287,7 +288,6 @@ disabled={ false }
   label={ `Estado` }
 variant={ `single` }
 placeholder={ `Select an option...` }
-required={ undefined }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }
@@ -360,12 +360,11 @@ iconName={ `Search` }
           cell: ({ row }) => {
           const rowData = row.original;
 
-const { iconName, bgClass, textClass, label, className } = getStatusBadge(rowData);
 
 return <IGRPDataTableCellBadge
-  label={ label ?? row.original.estado }
+  label={ row.original.estado }
   variant={ `soft` }
-badgeClassName={ `${bgClass} ${textClass} ${className}` }
+badgeClassName={ `` }
 >
 
 </IGRPDataTableCellBadge>

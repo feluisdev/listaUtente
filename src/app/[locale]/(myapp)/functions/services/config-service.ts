@@ -23,7 +23,6 @@ export function getTipoDocumento() {
     { label: 'Cartão Nacional de Identificação', value: 'CNI' },
     { label: 'Passaporte', value: 'PEC' },
     { label: 'Número de Identificação de Pessoa Coletiva', value: 'NIPC' },
-    { label: 'NIF', value: 'NIF' },
   ];
 
   return tiposUtente;

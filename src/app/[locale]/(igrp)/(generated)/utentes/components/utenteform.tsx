@@ -121,7 +121,6 @@ const { data, isLoading } = useFetchPessoaByNif(nifValue);
 useEffect(() => {
   if (isLoading || !data || !data?.Entries?.Entry) return;
   formform1Ref.current?.setValue('nome', data.Entries.Entry.NOME);
-  formform1Ref.current?.setValue('tipoIdentificacao', 'NIF');
   formform1Ref.current?.setValue('identificacao', data.Entries.Entry.NU_NIF?.toString());
   formform1Ref.current?.setValue('nomeMae', data.Entries.Entry.NM_MAE);
   formform1Ref.current?.setValue('nomePai', data.Entries.Entry.NM_PAI);
