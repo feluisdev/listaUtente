@@ -1,7 +1,14 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { PaginatedResponse, PessoaResponse, Servico, Utente } from '../../types/global';
-import { getUtenteByID, getUtentes, getServicosAssociados, getPessoaByNif } from '../../actions/utente';
+import { Divida, PaginatedResponse, PessoaResponse, Servico, Utente } from '../../types/global';
+import {
+  getUtenteByID,
+  getUtentes,
+  getServicosAssociados,
+  getPessoaByNif,
+  getPessoaByIdentificacao,
+  getDivida,
+} from '../../actions/utente';
 import { callClientApi } from '../../lib/api-client';
 import { useMemo } from 'react';
 
@@ -44,7 +51,6 @@ export function useFetchUtentes(params?: FilterUtente) {
 
 // GET by ID
 export function useFetchUtente(utenteId: string) {
-
   return useQuery<Utente>({
     queryKey: ['utente', utenteId],
     queryFn: () => getUtenteByID(utenteId),
@@ -95,11 +101,32 @@ export function useFetchServicosAssociados(id: string) {
   });
 }
 
+export function useFetchDivida(id: string) {
+  return useQuery<PaginatedResponse<Divida>>({
+    queryKey: ['divida', id],
+    queryFn: () => getDivida(id),
+  });
+}
+
 //GET: Pessoa by NIF
 export function useFetchPessoaByNif(nif: string) {
   return useQuery<PessoaResponse>({
     queryKey: ['pessoaByNif', nif],
     queryFn: () => getPessoaByNif(nif),
     enabled: !!nif, // Only run query if nif is provided
+  });
+}
+
+export function useFetchPessoaByIdentificacao({
+  tipoIdentificacao,
+  identificacao,
+}: {
+  tipoIdentificacao: string;
+  identificacao: string;
+}) {
+  return useQuery<PessoaResponse | null>({
+    queryKey: ['pessoaByIdentificacao', identificacao],
+    queryFn: () => getPessoaByIdentificacao(tipoIdentificacao, identificacao),
+    enabled: !!identificacao && !!tipoIdentificacao, // Only run query if identificacao is provided
   });
 }

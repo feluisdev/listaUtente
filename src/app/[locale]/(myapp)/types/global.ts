@@ -5,12 +5,12 @@ export interface Utente {
   numero: string;
   nif: string;
   tipoIdentificacao?: string; // Novo campo do backend
-  identificacao?: string;     // Novo campo do backend
+  identificacao?: string; // Novo campo do backend
   nomeMae?: string;
   nomePai?: string;
   dataNascimento?: string;
-  genero?: string;            // Campo para gênero
-  nacionalidade?: string;     // Campo para nacionalidade
+  genero?: string; // Campo para gênero
+  nacionalidade?: string; // Campo para nacionalidade
   estado: string;
   endereco?: string;
   telefone?: string;
@@ -28,7 +28,6 @@ export interface PaginatedResponse<T> {
   first: boolean;
   content: T[];
 }
-
 
 //Create a intereface
 export interface Servico {
@@ -48,6 +47,16 @@ export interface Servico {
   };
 }
 
+export interface Divida {
+  duc: string;
+  valor: number;
+  juros: number;
+  dtLimite: string;
+  sujeito: number;
+  servicos: string;
+  estado: string;
+}
+
 export interface PessoaEntry {
   NU_NIF: number;
   NM_PAI: string;
@@ -55,12 +64,19 @@ export interface PessoaEntry {
   NOME: string;
   DATA_NASCIMENTO: string;
   DATA_EMISSAO: string;
-  EMISSOR: {
-    '@nil': string;
-  };
-  ESTADO_CIVIL: string;
   NATURALIDADE: string;
   MORADA: string;
+  BI: number;
+  SEXO: string;
+  DT_NASC: string;
+  NOME_MAE: string;
+  NOME_PAI: string;
+  DT_EMISSAO: string;
+  EMISSOR: string;
+  NAT_CONCELHO: string;
+  RESIDENCIA: string;
+  DT_VALIDADE: string;
+  NAT_COD_RNI: number;
 }
 
 export interface PessoaResponse {

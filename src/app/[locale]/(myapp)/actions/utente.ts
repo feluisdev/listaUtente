@@ -1,19 +1,18 @@
-import { buildQueryParams } from '@igrp/igrp-framework-react-design-system';
 import { callClientApi } from '../lib/api-client';
-import { PaginatedResponse, PessoaResponse, Servico, Utente } from '../types/global';
+import { Divida, PaginatedResponse, PessoaResponse, Servico, Utente } from '../types/global';
 
 // Helper function to build query string and filter out null/undefined values
 function buildQueryString(params: Record<string, string | number | undefined>): string {
-  const filteredParams = Object.entries(params).filter(([_, value]) => 
-    value !== null && value !== undefined && value !== ''
+  const filteredParams = Object.entries(params).filter(
+    ([_, value]) => value !== null && value !== undefined && value !== '',
   );
-  
+
   if (filteredParams.length === 0) return '';
-  
+
   const queryString = filteredParams
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
     .join('&');
-    
+
   return `?${queryString}`;
 }
 
@@ -49,8 +48,29 @@ export async function getServicosAssociados(utenteId: string) {
   });
 }
 
+export async function getDivida(utenteId: string) {
+  return await callClientApi<PaginatedResponse<Divida>>(`/api/utente/${utenteId}/divida`, {
+    method: 'GET',
+  });
+}
+
 export async function getPessoaByNif(nif: string) {
   return await callClientApi<PessoaResponse>(`/api/external/pessoa-by-nif?nif=${nif}`, {
     method: 'GET',
   });
+}
+
+export async function getPessoaByIdentificacao(tipoIdentificacao: string, identificacao: string) {
+  if (tipoIdentificacao === 'BI') {
+    return await callClientApi<PessoaResponse>(`/api/external/pessoa-by-bi?bi=${identificacao}`, {
+      method: 'GET',
+    });
+  }
+  if (tipoIdentificacao === 'PEC' || tipoIdentificacao === 'CNI') {
+    return await callClientApi<PessoaResponse>(`/api/external/pessoa-by-siniac?numeroSiniac=${identificacao}`, {
+      method: 'GET',
+    });
+  }
+
+  return null
 }

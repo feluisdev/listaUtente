@@ -30,8 +30,8 @@ export function getTipoDocumento() {
 
 export function getGenero() {
   const generos = [
-    { label: 'Masculino', value: 'MASCULINO' },
-    { label: 'Feminino', value: 'FEMININO' },
+    { label: 'Masculino', value: 'M' },
+    { label: 'Feminino', value: 'F' },
   ];
 
   return generos;
@@ -46,9 +46,9 @@ export function getStatusBadge(utente?: any): {
 } {
   if (!utente) return {};
   const bgClass =
-    utente.estado === 'ATIVO'
-      ? 'bg-green-100 text-green-800 hover:bg-green-100'
-      : 'bg-red-100 text-red-800 hover:bg-red-100';
+    utente.estado === 'ATIVO' || utente.estado === 'ativo'
+      ? 'bg-green-100 text-gray-800 hover:bg-green-100 dark:bg-green-900 dark:text-gray-100'
+      : 'bg-red-100 text-gray-800 hover:bg-red-100 dark:bg-red-900 dark:text-gray-100';
 
   const label = formatCamelCase(utente.estado);
   return { label: label, bgClass: bgClass, textClass: '', className: '', iconName: '' };

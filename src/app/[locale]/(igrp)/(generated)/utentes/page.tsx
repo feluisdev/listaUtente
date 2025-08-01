@@ -58,7 +58,7 @@ const [numeroFlt, setNumeroFlt] = useState<any>(undefined);
 
 const [tpUtenteFlt, setTpUtenteFlt] = useState<any>(undefined);
 
-const [estadoFlt, setEstadoFlt] = useState<any>(undefined);
+const [estadoFlt, setEstadoFlt] = useState<string>(`ATIVO`);
 
 const [nifFlt, setNifFlt] = useState<any>(undefined);
 
@@ -360,11 +360,12 @@ iconName={ `Search` }
           cell: ({ row }) => {
           const rowData = row.original;
 
+const { iconName, bgClass, textClass, label, className } = getStatusBadge(rowData);
 
 return <IGRPDataTableCellBadge
-  label={ row.original.estado }
+  label={ label ?? row.original.estado }
   variant={ `soft` }
-badgeClassName={ `` }
+badgeClassName={ `${bgClass} ${textClass} ${className}` }
 >
 
 </IGRPDataTableCellBadge>
@@ -399,6 +400,12 @@ return (
         component: IGRPDataTableDropdownMenuLink,
         props: {
           labelTrigger: `Detalhes`,icon: `UserCog`,href: `/utentes/${row.original.id}/detalhes`,          showIcon: true,          
+}
+      },
+      {
+        component: IGRPDataTableDropdownMenuLink,
+        props: {
+          labelTrigger: `Divida do Utente`,icon: `CreditCard`,href: `/utentes/${row.original.id}/divida`,          showIcon: true,          
 }
       },
 ]
