@@ -38,7 +38,7 @@ export default function PageUtentesComponent() {
   
   type Table1 = {
     numero: string;
-    tipoUtente: string;
+    tipoUtenteDesc: string;
     nome: string;
     nif: string;
     estado: string;
@@ -332,9 +332,9 @@ iconName={ `Search` }
         },
         {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tipo` } />)
-,accessorKey: 'tipoUtente',
+,accessorKey: 'tipoUtenteDesc',
           cell: ({ row }) => {
-          return row.getValue("tipoUtente")
+          return row.getValue("tipoUtenteDesc")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
