@@ -82,7 +82,21 @@ useEffect(() => {
 
   console.log(data)
 
-  setContentTabletable1(data?.content);
+  // Map Utente objects to Table1 objects with tipoUtenteDesc
+  const tipoUtenteOptions = getTipoUtente();
+  const mappedData = data.content.map(utente => {
+    // Find the matching label for the tipoUtente value
+    const tipoUtenteOption = tipoUtenteOptions.find(option => option.value === utente.tipoUtente);
+    const tipoUtenteDesc = tipoUtenteOption?.label || utente.tipoUtente;
+    
+    // Return a Table1 object with all Utente properties plus tipoUtenteDesc
+    return {
+      ...utente,
+      tipoUtenteDesc
+    };
+  });
+  
+  setContentTabletable1(mappedData);
   setStatstatTotalValue(stats?.total ?? 0);
   setStatstatsCard1Value(stats?.totalCamara ?? 0);
   setStatstatsCard3Value(stats?.totalEmpresa ?? 0);
