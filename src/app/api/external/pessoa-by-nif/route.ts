@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { callApi } from '@/app/[locale]/(myapp)/lib/api-server';
+import { callApi } from '@/app/(myapp)/lib/api-server';
 
 const EXTERNAL_API_URL = process.env.EXTERNAL_API_URL ;
 const API_TOKEN = process.env.EXTERNAL_API_TOKEN;

@@ -1,7 +1,7 @@
-import { UserProps } from '@/features/users/types';
+import { IGRPUserArgs } from '@igrp/framework-next-types';
 
-export const IGRP_MOCK_USER: UserProps = {
-  id: '1',
+export const IGRP_MOCK_USER: IGRPUserArgs = {
+  id: 1,
   igrpUsername: 'igrp.user',
   username: 'igrp.user',
   fullname: 'IGRP USER',

@@ -1,18 +1,20 @@
-import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+import { NextConfig } from 'next';
 
-const withNextIntl = createNextIntlPlugin();
+// use this if you are using a custom domain for igrp-applications-center
+const basePath = process.env.IGRP_APP_BASE_PATH || '';
 
 const nextConfig: NextConfig = {
-  crossOrigin: 'anonymous',
-
-  // TDOD: To remove and config for projects
+  // uncomment this line when you build this build,
   output: 'standalone',
+
+  // use this if you are using a custom domain for igrp-applications-center
+  basePath: basePath,
+
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'storage-api.nosi.cv',
+        hostname: 'nosi.cv',
       },
       {
         protocol: 'https',
@@ -22,4 +24,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default nextConfig;

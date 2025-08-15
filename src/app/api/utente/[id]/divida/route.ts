@@ -1,8 +1,8 @@
 //get servicos associados
 
 import { NextRequest, NextResponse } from 'next/server';
-import { callApi } from '@/app/[locale]/(myapp)/lib/api-server';
-import { PaginatedResponse, Servico } from '@/app/[locale]/(myapp)/types/global';
+import { callApi } from '@/app/(myapp)/lib/api-server';
+import { PaginatedResponse, Servico } from '@/app/(myapp)/types/global';
 
 const API_UTENTES_URL = process.env.NEXT_PUBLIC_API_URL_UTENTE + '/utentes/v1';
 

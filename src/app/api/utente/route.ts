@@ -1,5 +1,5 @@
-import { callApi } from '@/app/[locale]/(myapp)/lib/api-server';
-import { PaginatedResponse, Utente } from '@/app/[locale]/(myapp)/types/global';
+import { callApi } from '@/app/(myapp)/lib/api-server';
+import { PaginatedResponse, Utente } from '@/app/(myapp)/types/global';
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_UTENTES_URL = process.env.NEXT_PUBLIC_API_URL_UTENTE + '/utentes/v1';

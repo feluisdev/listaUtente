@@ -1,20 +1,40 @@
-import { Application } from '@/features/applications/types';
+import { IGRPApplicationArgs } from '@igrp/framework-next-types';
 
-export const IGRP_MOCK_APPS_DATA: Application[] = [
+export const IGRP_MOCK_APPS_DATA: IGRPApplicationArgs[] = [
   {
     id: 1,
-    code: 'APP001',
+    code: 'APPIGRPDEMO',
     name: 'IGRP Demo',
     description: 'This is an app test for the IGRP',
     status: 'ACTIVE',
     type: 'INTERNAL',
     owner: 'igrp@nosi.cv',
-    picture: '/igrp/logo-no-text.png',
+    picture: 'https://nosi.cv/o/nosi-sober-theme/images/favicon.ico',
     url: 'https://igrp.cv',
     slug: 'user-management',
-    createdBy: 'system',
-    createdDate: '2024-01-15T10:30:00Z',
-    lastModifiedBy: 'admin',
-    lastModifiedDate: '2024-03-01T14:20:00Z',
-  }
+  },
+  {
+    id: 2,
+    code: 'APPIGRPDEMO2',
+    name: 'IGRP Demo 2',
+    description: 'This is an app test for the IGRP 2',
+    status: 'ACTIVE',
+    type: 'INTERNAL',
+    owner: 'igrp@nosi.cv',
+    picture: 'https://nosi.cv/o/nosi-sober-theme/images/favicon.ico',
+    url: 'https://nosi.cv',
+    slug: 'user-management',
+  },
+  {
+    id: 3,
+    code: 'APPIGRPDEMO3',
+    name: 'IGRP Demo 3',
+    description: 'This is an app test for the IGRP 3',
+    status: 'ACTIVE',
+    type: 'INTERNAL',
+    owner: 'igrp@nosi.cv',
+    picture: 'https://nosi.cv/o/nosi-sober-theme/images/favicon.ico',
+    url: 'https://igrp.cv',
+    slug: 'user-management',
+  },
 ];

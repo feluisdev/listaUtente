@@ -9,7 +9,7 @@
  *
  * ### Registration Rules
  * 1. All entries must be arrays of importable paths (no extensions)
- * 2. Paths are relative to `src/app/[locale]/(myapp)`
+ * 2. Paths are relative to `src/app/(myapp)`
  * 3. Categories are optional but must contain at least one valid entry
  *
  * ✅ **Examples**:
@@ -24,15 +24,15 @@
  *
  * ❌ **Invalid**:
  * - `'./types/User.ts'` → do not use relative paths or file extensions.
- * - `'src/app/[locale]/(myapp)/types/User'` → the `src/app/[locale]/(myapp)` prefix is implied.
+ * - `'src/app/(myapp)/types/User'` → the `src/app/(myapp)` prefix is implied.
  *
  * ### Location Requirement
- * All registered files must exist **under `src/app/[locale]/(myapp)`**. Files outside of this folder
+ * All registered files must exist **under `src/app/(myapp)`**. Files outside of this folder
  * will not be parsed or loaded.
  *
  * ### Path Resolution
- * - Paths resolve to `@/app/[locale]/(myapp)/[your-path]`
- * - Files must exist under `src/app/[locale]/(myapp)`
+ * - Paths resolve to `@/app/(myapp)/[your-path]`
+ * - Files must exist under `src/app/(myapp)`
  * - Missing files will trigger build warnings
  *
  * ### Purpose
