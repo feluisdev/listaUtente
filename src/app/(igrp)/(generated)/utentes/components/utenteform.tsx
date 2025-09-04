@@ -37,7 +37,7 @@ export default function Utenteform({ isEdit, utente } : { isEdit?: boolean, uten
   const form1 = z.object({
     tipoUtente: z.string().nonempty(),
     nif: z.string().min(9).max(9).nonempty(),
-    tipoIdentificacao: z.string().optional(),
+    tipoIdentificacao: z.string().nonempty(),
     identificacao: z.string().nonempty(),
     nomeMae: z.string().optional(),
     nome: z.string().nonempty(),
