@@ -82,21 +82,7 @@ useEffect(() => {
 
   console.log(data)
 
-  // Map Utente objects to Table1 objects with tipoUtenteDesc
-  const tipoUtenteOptions = getTipoUtente();
-  const mappedData = data.content.map(utente => {
-    // Find the matching label for the tipoUtente value
-    const tipoUtenteOption = tipoUtenteOptions.find(option => option.value === utente.tipoUtente);
-    const tipoUtenteDesc = tipoUtenteOption?.label || utente.tipoUtente;
-    
-    // Return a Table1 object with all Utente properties plus tipoUtenteDesc
-    return {
-      ...utente,
-      tipoUtenteDesc
-    };
-  });
-  
-  setContentTabletable1(mappedData);
+  setContentTabletable1(data?.content);
   setStatstatTotalValue(stats?.total ?? 0);
   setStatstatsCard1Value(stats?.totalCamara ?? 0);
   setStatstatsCard3Value(stats?.totalEmpresa ?? 0);
@@ -317,21 +303,6 @@ gridSize={ `full` }
 value={ estadoFlt }
 >
 </IGRPCombobox></div>
-<div className={ cn('flex','flex-1','flex flex-row flex-nowrap items-stretch justify-end gap-2',)}    >
-	<IGRPButton
-  name={ `button2` }
-  
-variant={ `secondary` }
-size={ `default` }
-showIcon={ true }
-iconName={ `Search` }
-
-  className={ cn() }
-  onClick={ () => {} }
-  
->
-  Pesquisar
-</IGRPButton></div>
 <IGRPDataTable<Table1, Table1>
   className={ cn() }
   columns={
@@ -400,7 +371,26 @@ return (
       {
         component: IGRPDataTableDropdownMenuAlert,
         props: {
-          modalTitle: `Inativar`,labelTrigger: `Inativar`,          showIcon: true,showCancel: true,labelCancel: `Cancel`,variantCancel: `default`,showConfirm: true,labelConfirm: `Confirm`,variantConfirm: `default`,          onClickConfirm: ()=>{deleteUtente(rowData.id)},
+          modalTitle: `Inativar`,labelTrigger: `Inativar`,          showIcon: true,showCancel: true,labelCancel: `Cancel`,variantCancel: `default`,showConfirm: true,labelConfirm: `Confirm`,variantConfirm: `default`,          onClickConfirm: async () => {  try {
+     await deleteUtente(rowData.id);
+     setContentTabletable1(prev =>
+      prev.map(r => (r.id === rowData.id ? { ...r, estado: 'INATIVO' } : r))
+    );
+
+    igrpToast({
+      title: 'Sucesso',
+      description: 'Utente inativado com sucesso!',
+      type: 'success',
+    });
+    router.refresh();
+  } catch (error) {
+    igrpToast({
+      title: 'Erro',
+      description: 'Falha ao inativar o utente',
+      type: 'error',
+    });
+  }
+},
           children: <>Deseja inativar o utente?</>
 }
       },

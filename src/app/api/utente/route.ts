@@ -89,12 +89,17 @@ export async function DELETE(req: NextRequest) {
     if (!utenteId) {
       return NextResponse.json({ message: 'ID do utente é obrigatório' }, { status: 400 });
     }
-
-    const res = await callApi<any>(`${API_UTENTES_URL}/${utenteId}`, {
+    const resText = await callApi<string>(`${API_UTENTES_URL}/${utenteId}`, {
       method: 'DELETE',
+      isTextResponse: true,
+      headers: { Accept: 'text/plain, application/json' }, 
     });
 
-    return NextResponse.json(res, { status: 200 });
+    return NextResponse.json(
+      { message: (resText || 'Utente inativado com sucesso').trim() },
+      { status: 200 }
+    );
+
   } catch (error: any) {
     console.error('Erro ao inativar utente:', error);
     return NextResponse.json(
@@ -106,3 +111,4 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+

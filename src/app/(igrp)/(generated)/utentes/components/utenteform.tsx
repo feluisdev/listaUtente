@@ -9,7 +9,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { IGRPFormHandle } from "@igrp/igrp-framework-react-design-system";
-import { z } from 'zod'
+import { z } from "zod"
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { 
   IGRPPageHeader,
@@ -35,19 +35,19 @@ export default function Utenteform({ isEdit, utente } : { isEdit?: boolean, uten
 
   
   const form1 = z.object({
-    tipoUtente: z.string().optional(),
-    nome: z.string().optional(),
-    nif: z.string().min(9).max(9).optional(),
+    tipoUtente: z.string(),
+    nif: z.string().min(9).max(9),
     tipoIdentificacao: z.string().optional(),
-    identificacao: z.string().optional(),
+    identificacao: z.string(),
     nomeMae: z.string().optional(),
+    nome: z.string(),
     nomePai: z.string().optional(),
     dataNascimento: z.date().optional(),
     genero: z.string().optional(),
     nacionalidade: z.string().optional(),
-    endereco: z.string().optional(),
-    telefone: z.string().optional(),
-    email: z.string().optional(),
+    endereco: z.string(),
+    telefone: z.string().min(9).max(9),
+    email: z.string().regex(/^[^@]+@[^@]+$/).email().includes("@"),
     caixaPostal: z.string().optional(),
     departamentoResponsavel: z.string().optional()
 })
@@ -56,20 +56,20 @@ type Form1ZodType = typeof form1;
 
 const initForm1: z.infer<Form1ZodType> = {
     tipoUtente: ``,
-    nome: ``,
     nif: ``,
-    tipoIdentificacao: ``,
+    tipoIdentificacao: undefined,
     identificacao: ``,
-    nomeMae: ``,
-    nomePai: ``,
+    nomeMae: undefined,
+    nome: ``,
+    nomePai: undefined,
     dataNascimento: undefined,
-    genero: ``,
-    nacionalidade: ``,
+    genero: undefined,
+    nacionalidade: undefined,
     endereco: ``,
     telefone: ``,
     email: ``,
-    caixaPostal: ``,
-    departamentoResponsavel: ``
+    caixaPostal: undefined,
+    departamentoResponsavel: undefined
 }
 
 
@@ -83,9 +83,9 @@ const [pageHeader1Title, setPageHeader1Title] = useState<string>(`Novo Utente`);
 
 const [isCidadao, setIsCidadao] = useState<boolean>(false);
 
-const [nifValue, setNifValue] = useState<string>(``);
+const [nifValue, setNifValue] = useState<string>(undefined);
 
-const [searchIdentificacao, setSearchIdentificacao] = useState<string>(``);
+const [searchIdentificacao, setSearchIdentificacao] = useState<string>(undefined);
 
 const [tipoIdentificacaoValue, setTipoIdentificacaoValue] = useState<string>(`any`);
 
@@ -103,12 +103,20 @@ try {
 
   // Call the cessar function
   await updateOrCreateUtente(data);
-
+ console.log("hey i was called with data", data)
   igrpToast({
     title: 'Sucesso',
     description: 'Operacao efetuado com sucesso!',
     type: 'success',
   });
+  if(isEdit) {
+    console.log("is editing called")
+  } else {
+    formform1Ref.current?.reset(initForm1);
+    setForm1Data(initForm1)
+  }
+  
+
 
 } catch (error: any) {
   console.error('Error cessing utente:', error);
@@ -121,7 +129,7 @@ try {
 
 }
 
-const { data, isLoading } = useFetchPessoaByNif(nifValue);
+const {data, isLoading} = useFetchPessoaByNif(nifValue)
 
 const { data: dataIdentificacao, isLoading: isLoadingIdentificacao } = useFetchPessoaByIdentificacao({
   tipoIdentificacao: tipoIdentificacaoValue, identificacao: searchIdentificacao
@@ -194,6 +202,9 @@ useEffect(() => {
     if (utente){
       if (utente.dataNascimento === null || utente.dataNascimento === undefined) {
         delete utente.dataNascimento;
+      }
+      if (utente.nacionalidade === null || utente.nacionalidade === undefined) {
+        delete utente.nacionalidade;
       }
       setForm1Data(utente);
     }
@@ -451,6 +462,7 @@ showIcon={ false }
 required={ true }
 
 
+disabled={ false }
   className={ cn('col-span-1',) }
   
   
