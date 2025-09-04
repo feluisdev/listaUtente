@@ -1,6 +1,6 @@
-import { IGRPMenuProps } from '@/features/menus/types';
+import { IGRPMenuItemArgs } from '@igrp/framework-next-types';
 
-export const IGRP_DEFAULT_MENU: IGRPMenuProps[] = [
+export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
   {
     id: 1,
     name: 'Lista de Utentes',
@@ -13,10 +13,6 @@ export const IGRP_DEFAULT_MENU: IGRPMenuProps[] = [
     parentId: null,
     applicationId: 1,
     resourceId: null,
-    createdBy: 'admin',
-    createdDate: '2022-01-01T12:00:00.000Z',
-    lastModifiedBy: 'admin',
-    lastModifiedDate: '2022-01-01T12:00:00.000Z',
   },
   {
     id: 2,
@@ -30,10 +26,6 @@ export const IGRP_DEFAULT_MENU: IGRPMenuProps[] = [
     parentId: null,
     applicationId: 1,
     resourceId: null,
-    createdBy: 'admin',
-    createdDate: '2022-01-01T12:00:00.000Z',
-    lastModifiedBy: 'admin',
-    lastModifiedDate: '2022-01-01T12:00:00.000Z',
   },
   /* {
     id: 1,

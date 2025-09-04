@@ -35,19 +35,19 @@ export default function Utenteform({ isEdit, utente } : { isEdit?: boolean, uten
 
   
   const form1 = z.object({
-    tipoUtente: z.string(),
-    nif: z.string().min(9).max(9),
+    tipoUtente: z.string().nonempty(),
+    nif: z.string().min(9).max(9).nonempty(),
     tipoIdentificacao: z.string().optional(),
-    identificacao: z.string(),
+    identificacao: z.string().nonempty(),
     nomeMae: z.string().optional(),
-    nome: z.string(),
+    nome: z.string().nonempty(),
     nomePai: z.string().optional(),
     dataNascimento: z.date().optional(),
     genero: z.string().optional(),
     nacionalidade: z.string().optional(),
-    endereco: z.string(),
-    telefone: z.string().min(9).max(9),
-    email: z.string().regex(/^[^@]+@[^@]+$/).email().includes("@"),
+    endereco: z.string().nonempty(),
+    telefone: z.string().min(9).max(9).nonempty(),
+    email: z.string().regex(/^[^@]+@[^@]+$/).email().includes("@").nonempty(),
     caixaPostal: z.string().optional(),
     departamentoResponsavel: z.string().optional()
 })
@@ -57,19 +57,19 @@ type Form1ZodType = typeof form1;
 const initForm1: z.infer<Form1ZodType> = {
     tipoUtente: ``,
     nif: ``,
-    tipoIdentificacao: undefined,
+    tipoIdentificacao: ``,
     identificacao: ``,
-    nomeMae: undefined,
+    nomeMae: ``,
     nome: ``,
-    nomePai: undefined,
+    nomePai: ``,
     dataNascimento: undefined,
-    genero: undefined,
-    nacionalidade: undefined,
+    genero: ``,
+    nacionalidade: ``,
     endereco: ``,
     telefone: ``,
     email: ``,
-    caixaPostal: undefined,
-    departamentoResponsavel: undefined
+    caixaPostal: ``,
+    departamentoResponsavel: ``
 }
 
 
@@ -79,15 +79,15 @@ const initForm1: z.infer<Form1ZodType> = {
   const [selecttipoIdentificacaoOptions, setSelecttipoIdentificacaoOptions] = useState<IGRPOptionsProps[]>([]);
   const [selectgeneroOptions, setSelectgeneroOptions] = useState<IGRPOptionsProps[]>([]);
   
-const [pageHeader1Title, setPageHeader1Title] = useState<string>(`Novo Utente`);
+const [pageHeader1Title, setPageHeader1Title] = useState<string>('Novo Utente');
 
 const [isCidadao, setIsCidadao] = useState<boolean>(false);
 
-const [nifValue, setNifValue] = useState<string>(undefined);
+const [nifValue, setNifValue] = useState<string>('');
 
-const [searchIdentificacao, setSearchIdentificacao] = useState<string>(undefined);
+const [searchIdentificacao, setSearchIdentificacao] = useState<string>('');
 
-const [tipoIdentificacaoValue, setTipoIdentificacaoValue] = useState<string>(`any`);
+const [tipoIdentificacaoValue, setTipoIdentificacaoValue] = useState<string>('');
 
 const { igrpToast } = useIGRPToast()
 
@@ -225,12 +225,10 @@ useEffect(() => {
   <div className="flex items-center gap-2">
     <IGRPButton
   name={ `button2` }
-  
-variant={ `default` }
+  variant={ `default` }
 size={ `default` }
 showIcon={ true }
 iconName={ `Save` }
-
   className={ cn() }
   onClick={ () => formform1Ref.current?.submit() }
   
@@ -269,8 +267,6 @@ roleColor={ `solid` }
 color={ `primary` }
 showIcon={ true }
 iconName={ `CircleUser` }
-
-
   className={ cn('mt-2',) }
   
   
@@ -291,8 +287,6 @@ selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }
 iconName={ `CornerDownRight` }
-
-
 gridSize={ `full` }
   className={ cn('col-span-1',) }
   onChange={ (value)=>{
@@ -307,8 +301,6 @@ gridSize={ `full` }
   label={ `NIF` }
 showIcon={ false }
 required={ true }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -324,10 +316,7 @@ selectLabel={ `Nenhuma opção encontrada` }
 showSearch={ true }
 showIcon={ false }
 iconName={ `CornerDownRight` }
-
-
 gridSize={ `full` }
-
   className={ cn('col-span-1',) }
   onChange={ (value)=>setTipoIdentificacaoValue(value as string)
  }
@@ -339,8 +328,6 @@ gridSize={ `full` }
   label={ `Identificação` }
 showIcon={ false }
 required={ true }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -351,8 +338,6 @@ required={ true }
   label={ `Nome da Mãe` }
 showIcon={ false }
 required={ false }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -363,8 +348,6 @@ required={ false }
   label={ `Nome Completo` }
 showIcon={ false }
 required={ true }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -375,8 +358,6 @@ required={ true }
   label={ `Nome do Pai` }
 showIcon={ false }
 required={ false }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -411,8 +392,6 @@ selectLabel={ `Nenhuma opção encontrada` }
 showSearch={ true }
 showIcon={ false }
 iconName={ `CornerDownRight` }
-
-
 gridSize={ `full` }
   className={ cn('col-span-1',) }
   
@@ -424,8 +403,6 @@ gridSize={ `full` }
   label={ `Nacionalidade` }
 showIcon={ false }
 required={ false }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -436,8 +413,6 @@ required={ false }
   label={ `Endereço` }
 showIcon={ false }
 required={ true }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -448,8 +423,6 @@ required={ true }
   label={ `Telefone` }
 showIcon={ false }
 required={ true }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -460,8 +433,6 @@ required={ true }
   label={ `Email` }
 showIcon={ false }
 required={ true }
-
-
 disabled={ false }
   className={ cn('col-span-1',) }
   
@@ -473,8 +444,6 @@ disabled={ false }
   label={ `Caixa Postal` }
 showIcon={ false }
 required={ false }
-
-
   className={ cn('col-span-1',) }
   
   
@@ -485,8 +454,6 @@ required={ false }
   label={ `Departamento Responsável` }
 showIcon={ false }
 required={ false }
-
-
   className={ cn('col-span-1',) }
   
   
