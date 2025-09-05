@@ -46,7 +46,7 @@ export default function Utenteform({ isEdit, utente } : { isEdit?: boolean, uten
     genero: z.string().optional(),
     nacionalidade: z.string().optional(),
     endereco: z.string().nonempty(),
-    telefone: z.string().min(9).max(9).nonempty(),
+    telefone: z.string().min(7).max(7).nonempty(),
     email: z.string().regex(/^[^@]+@[^@]+$/).email().includes("@").nonempty(),
     caixaPostal: z.string().optional(),
     departamentoResponsavel: z.string().optional()
