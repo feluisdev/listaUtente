@@ -129,7 +129,7 @@ try {
 
 }
 
-const {data, isLoading} = useFetchPessoaByNif(nifValue)
+const { data, isLoading } = useFetchPessoaByNif(nifValue)
 
 const { data: dataIdentificacao, isLoading: isLoadingIdentificacao } = useFetchPessoaByIdentificacao({
   tipoIdentificacao: tipoIdentificacaoValue, identificacao: searchIdentificacao
@@ -155,7 +155,7 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-    if (isLoadingIdentificacao || !dataIdentificacao || !dataIdentificacao?.Entries?.Entry) return;
+  if (isLoadingIdentificacao || !dataIdentificacao || !dataIdentificacao?.Entries?.Entry) return;
 
 
   formform1Ref.current?.setValue('nome', dataIdentificacao.Entries.Entry.NOME);
@@ -164,7 +164,7 @@ useEffect(() => {
   // Convert the date from DD-MM-YYYY format to a proper Date object
   const dateString = dataIdentificacao.Entries.Entry.DT_NASC;
   let dataNascimento;
-  
+
   if (dateString) {
     // Parse DD-MM-YYYY format
     const [day, month, year] = dateString.split('-');
@@ -197,18 +197,28 @@ useEffect(() => {
   loadFormData();
 }, []);
 
-  useEffect(() => {
-   
-    if (utente){
-      if (utente.dataNascimento === null || utente.dataNascimento === undefined) {
-        delete utente.dataNascimento;
-      }
-      if (utente.nacionalidade === null || utente.nacionalidade === undefined) {
-        delete utente.nacionalidade;
-      }
-      setForm1Data(utente);
+useEffect(() => {
+
+  if (utente) {
+    if (utente.dataNascimento === null || utente.dataNascimento === undefined) {
+      delete utente.dataNascimento;
     }
-  }, [utente]);
+    if (utente.nacionalidade === null || utente.nacionalidade === undefined) {
+      delete utente.nacionalidade;
+    }
+    setForm1Data(utente);
+  }
+}, [utente]);
+
+useEffect(() => {
+  const optionsTpDocs = getTipoDocumento();
+
+  if (isCidadao) {
+    setSelecttipoIdentificacaoOptions(optionsTpDocs.filter((option) => option.value !== 'NIPC') || []);
+  } else {
+    setSelecttipoIdentificacaoOptions(optionsTpDocs.filter((option) => option.value === 'NIPC') || []);
+  }
+}, [isCidadao]);
 
 
   return (

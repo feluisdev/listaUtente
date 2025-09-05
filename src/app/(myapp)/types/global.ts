@@ -18,6 +18,7 @@ export interface Utente {
   caixaPostal?: string;
   departamentoResponsavel?: string;
   tipoUtenteDesc: string;
+  estadoDesc: string;
 }
 
 export interface PaginatedResponse<T> {
