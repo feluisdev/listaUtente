@@ -376,14 +376,16 @@ export default function PageUtentesComponent() {
 
                   return (
                     <IGRPDataTableRowAction>
-                      <IGRPDataTableButtonLink
-                        labelTrigger={`Editar`}
-                        href={`/utentes/${row.original.id}/edit`}
-                        variant={`ghost`}
-                        icon={`SquarePen`}
-                        className={cn()}
-                        action={() => {}}
-                      ></IGRPDataTableButtonLink>
+                      {rowData.estado === 'ativo' && (
+                        <IGRPDataTableButtonLink
+                          labelTrigger={`Editar`}
+                          href={`/utentes/${row.original.id}/edit`}
+                          variant={`ghost`}
+                          icon={`SquarePen`}
+                          className={cn()}
+                          action={() => {}}
+                        ></IGRPDataTableButtonLink>
+                      )}
                       <IGRPDataTableDropdownMenu
                         items={[
                           {
@@ -423,6 +425,27 @@ export default function PageUtentesComponent() {
                                       handleInativar(rowData);
                                     },
                                     children: <>Deseja inativar o utente?</>,
+                                  },
+                                },
+                              ]
+                            : []),
+                          ...(rowData.estado === 'inativo'
+                            ? [
+                                {
+                                  component: IGRPDataTableDropdownMenuAlert,
+                                  props: {
+                                    modalTitle: `Ativar Utente`,
+                                    labelTrigger: `Ativar`,
+                                    icon: `UserRoundCheck`,
+                                    showIcon: true,
+                                    showCancel: true,
+                                    labelCancel: `Cancel`,
+                                    variantCancel: "default" as const,
+                                    showConfirm: true,
+                                    labelConfirm: `Confirm`,
+                                    variantConfirm: `default` as const,
+                                    onClickConfirm: () => {},
+                                    children: <>Deseja ativar o utente?</>,
                                   },
                                 },
                               ]

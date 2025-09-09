@@ -306,6 +306,7 @@ gridSize={ `full` }
 
 } }
   options={ selecttipoUtenteOptions }
+disabled={ isEdit }
 >
 </IGRPCombobox>
 <IGRPInputText
@@ -315,7 +316,7 @@ showIcon={ false }
 required={ true }
   className={ cn('col-span-1',) }
   
-  
+  disabled={ isEdit }
 >
 </IGRPInputText>
 <IGRPCombobox
@@ -333,6 +334,7 @@ gridSize={ `full` }
   onChange={ (value)=>setTipoIdentificacaoValue(value as string)
  }
   options={ selecttipoIdentificacaoOptions }
+disabled={ isEdit }
 >
 </IGRPCombobox>
 <IGRPInputText
@@ -342,7 +344,7 @@ showIcon={ false }
 required={ true }
   className={ cn('col-span-1',) }
   
-  
+  disabled={ isEdit }
 >
 </IGRPInputText>
 { isCidadao && (<IGRPInputText
@@ -352,7 +354,7 @@ showIcon={ false }
 required={ false }
   className={ cn('col-span-1',) }
   
-  
+  disabled={ isEdit }
 >
 </IGRPInputText>)}
 <IGRPInputText
@@ -362,7 +364,7 @@ showIcon={ false }
 required={ true }
   className={ cn('col-span-1',) }
   
-  
+  disabled={ isEdit }
 >
 </IGRPInputText>
 { isCidadao && (<IGRPInputText
@@ -372,7 +374,7 @@ showIcon={ false }
 required={ false }
   className={ cn('col-span-1',) }
   
-  
+  disabled={ isEdit }
 >
 </IGRPInputText>)}
 { isCidadao && (<IGRPDatePicker
@@ -408,6 +410,7 @@ gridSize={ `full` }
   className={ cn('col-span-1',) }
   
   options={ selectgeneroOptions }
+disabled={ isEdit }
 >
 </IGRPCombobox>)}
 { isCidadao && (<IGRPInputText
@@ -417,7 +420,7 @@ showIcon={ false }
 required={ false }
   className={ cn('col-span-1',) }
   
-  
+  disabled={ isEdit }
 >
 </IGRPInputText>)}
 <IGRPInputText
