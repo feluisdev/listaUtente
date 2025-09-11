@@ -209,12 +209,13 @@ useEffect(() => {
       delete utente.nacionalidade;
     }
     setForm1Data(utente);
+    setIsCidadao(utente.tipoUtente === 'CIDADAO');
   }
 }, [utente]);
 
 useEffect(() => {
   const optionsTpDocs = getTipoDocumento();
-
+  
   if (isCidadao) {
     setSelecttipoIdentificacaoOptions(optionsTpDocs.filter((option) => option.value !== 'NIPC') || []);
   } else {
