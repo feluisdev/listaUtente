@@ -1,4 +1,3 @@
-import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Divida, PaginatedResponse, PessoaResponse, Servico, Utente } from '../../types/global';
 import {

@@ -21,8 +21,7 @@ import {
 	IGRPCardContent,
 	IGRPCombobox,
 	IGRPInputText,
-	IGRPDatePicker,
-	IGRPCardFooter 
+	IGRPDatePicker 
 } from "@igrp/igrp-framework-react-design-system";
 import {updateOrCreateUtente} from '@/app/(myapp)/functions/services/utente-service'
 import {getTipoUtente} from '@/app/(myapp)/functions/services/config-service'
@@ -32,6 +31,7 @@ import {useFetchPessoaByNif} from '@/app/(myapp)/functions/services/utente-servi
 import {useFetchPessoaByIdentificacao} from '@/app/(myapp)/functions/services/utente-service'
 
 export default function Utenteform({ isEdit, utente } : { isEdit?: boolean, utente?: any }) {
+
 
   
   const form1 = z.object({
@@ -227,7 +227,7 @@ useEffect(() => {
   return (
 <div className={ cn('component',)}    >
 	<IGRPPageHeader
-  name={ `pageHeader1` }
+  id={ `pageHeader1` }
   iconBackButton={ `ArrowLeft` }
   showBackButton={ true }
   urlBackButton={ `/utentes` }
@@ -237,7 +237,7 @@ useEffect(() => {
 >
   <div className="flex items-center gap-2">
     <IGRPButton
-  name={ `button2` }
+  id={ `button2` }
   variant={ `default` }
 size={ `default` }
 showIcon={ true }
@@ -262,7 +262,7 @@ formRef={ formform1Ref }
 >
   <>
   <IGRPCard
-  name={ `card1` }
+  id={ `card2` }
   
   className={ cn() }
   
@@ -272,7 +272,7 @@ formRef={ formform1Ref }
   
 >
   <IGRPHeadline
-  name={ `headline1` }
+  id={ `headline1` }
   title={ `Informações do Utente` }
 description={ undefined }
 variant={ `h6` }
@@ -280,18 +280,18 @@ roleColor={ `solid` }
 color={ `primary` }
 showIcon={ true }
 iconName={ `CircleUser` }
-  className={ cn('mt-2',) }
   
   
 >
 </IGRPHeadline>
 </IGRPCardHeader>
   <IGRPCardContent
+  className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
-  <div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
+  <div className={ cn('grid','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
 	<IGRPCombobox
-  name={ `tipoUtente` }
+  id={ `tipoUtente` }
   label={ `Tipo De Utente` }
 variant={ `single` }
 placeholder={ `Select an option...` }
@@ -311,7 +311,7 @@ disabled={ isEdit }
 >
 </IGRPCombobox>
 <IGRPInputText
-  name={ `nif` }
+  id={ `nif` }
   label={ `NIF` }
 showIcon={ false }
 required={ true }
@@ -321,7 +321,7 @@ required={ true }
 >
 </IGRPInputText>
 <IGRPCombobox
-  name={ `tipoIdentificacao` }
+  id={ `tipoIdentificacao` }
   label={ `Tipo de Identificação` }
 variant={ `single` }
 placeholder={ `Selecione uma opção...` }
@@ -339,7 +339,7 @@ disabled={ isEdit }
 >
 </IGRPCombobox>
 <IGRPInputText
-  name={ `identificacao` }
+  id={ `identificacao` }
   label={ `Identificação` }
 showIcon={ false }
 required={ true }
@@ -349,7 +349,7 @@ required={ true }
 >
 </IGRPInputText>
 { isCidadao && (<IGRPInputText
-  name={ `nomeMae` }
+  id={ `nomeMae` }
   label={ `Nome da Mãe` }
 showIcon={ false }
 required={ false }
@@ -359,7 +359,7 @@ required={ false }
 >
 </IGRPInputText>)}
 <IGRPInputText
-  name={ `nome` }
+  id={ `nome` }
   label={ `Nome Completo` }
 showIcon={ false }
 required={ true }
@@ -369,7 +369,7 @@ required={ true }
 >
 </IGRPInputText>
 { isCidadao && (<IGRPInputText
-  name={ `nomePai` }
+  id={ `nomePai` }
   label={ `Nome do Pai` }
 showIcon={ false }
 required={ false }
@@ -380,7 +380,6 @@ required={ false }
 </IGRPInputText>)}
 { isCidadao && (<IGRPDatePicker
   placeholder={ `Please select a date...` }
-  name={ `dataNascimento` }
   id={ `dataNascimento` }
   label={ `Data de Nascimento` }
   startDate={ new Date(`1900-01-01`) }
@@ -398,7 +397,7 @@ required={ false }
   
 />)}
 { isCidadao && (<IGRPCombobox
-  name={ `genero` }
+  id={ `genero` }
   label={ `Gênero` }
 variant={ `single` }
 placeholder={ `Selecione uma opção...` }
@@ -415,7 +414,7 @@ disabled={ isEdit }
 >
 </IGRPCombobox>)}
 { isCidadao && (<IGRPInputText
-  name={ `nacionalidade` }
+  id={ `nacionalidade` }
   label={ `Nacionalidade` }
 showIcon={ false }
 required={ false }
@@ -425,7 +424,7 @@ required={ false }
 >
 </IGRPInputText>)}
 <IGRPInputText
-  name={ `endereco` }
+  id={ `endereco` }
   label={ `Endereço` }
 showIcon={ false }
 required={ true }
@@ -435,7 +434,7 @@ required={ true }
 >
 </IGRPInputText>
 <IGRPInputText
-  name={ `telefone` }
+  id={ `telefone` }
   label={ `Telefone` }
 showIcon={ false }
 required={ true }
@@ -445,7 +444,7 @@ required={ true }
 >
 </IGRPInputText>
 <IGRPInputText
-  name={ `email` }
+  id={ `email` }
   label={ `Email` }
 showIcon={ false }
 required={ true }
@@ -456,7 +455,7 @@ disabled={ false }
 >
 </IGRPInputText>
 <IGRPInputText
-  name={ `caixaPostal` }
+  id={ `caixaPostal` }
   label={ `Caixa Postal` }
 showIcon={ false }
 required={ false }
@@ -466,7 +465,7 @@ required={ false }
 >
 </IGRPInputText>
 <IGRPInputText
-  name={ `departamentoResponsavel` }
+  id={ `departamentoResponsavel` }
   label={ `Departamento Responsável` }
 showIcon={ false }
 required={ false }
@@ -476,10 +475,6 @@ required={ false }
 >
 </IGRPInputText></div>
 </IGRPCardContent>
-  <IGRPCardFooter
-  
->
-</IGRPCardFooter>
 </IGRPCard>
 </>
 </IGRPForm></div>

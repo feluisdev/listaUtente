@@ -129,7 +129,7 @@ export default function PageUtentesComponent() {
     <div className={cn('page', 'space-y-6')}>
       <div className={cn('section', ' space-x-3 space-y-3')}>
         <IGRPPageHeader
-          name={`pageHeader1`}
+          id={`pageHeader1`}
           title={`Gestão de Utentes`}
           description={`Gerir todos os utentes do sistema`}
           variant={`h3`}
@@ -137,7 +137,7 @@ export default function PageUtentesComponent() {
         >
           <div className="flex items-center gap-2">
             <IGRPButton
-              name={`button1`}
+              id={`button1`}
               variant={`default`}
               size={`default`}
               showIcon={true}
@@ -150,9 +150,9 @@ export default function PageUtentesComponent() {
           </div>
         </IGRPPageHeader>
 
-        <div className={cn('grid', 'grid-cols-1 ', 'md:grid-cols-2 ', 'lg:grid-cols-4 ', ' gap-4')}>
+        <div className={cn('grid', 'md:grid-cols-2 ', 'lg:grid-cols-4 ', ' gap-4')}>
           <IGRPStatsCard
-            name={`statTotal`}
+            id={`statTotal`}
             cardBorderPosition={`top`}
             cardBorder={`rounded-xl`}
             cardVariant={`info`}
@@ -171,7 +171,7 @@ export default function PageUtentesComponent() {
             value={statstatTotalValue}
           ></IGRPStatsCard>
           <IGRPStatsCard
-            name={`statsCard4`}
+            id={`statsCard4`}
             cardBorderPosition={`top`}
             cardBorder={`rounded-xl`}
             cardVariant={`warning`}
@@ -190,7 +190,7 @@ export default function PageUtentesComponent() {
             value={statstatsCard4Value}
           ></IGRPStatsCard>
           <IGRPStatsCard
-            name={`statsCard3`}
+            id={`statsCard3`}
             cardBorderPosition={`top`}
             cardBorder={`rounded-xl`}
             cardVariant={`success`}
@@ -209,7 +209,7 @@ export default function PageUtentesComponent() {
             value={statstatsCard3Value}
           ></IGRPStatsCard>
           <IGRPStatsCard
-            name={`statsCard1`}
+            id={`statsCard1`}
             cardBorderPosition={`top`}
             cardBorder={`rounded-xl`}
             cardVariant={`primary`}
@@ -229,18 +229,9 @@ export default function PageUtentesComponent() {
           ></IGRPStatsCard>
         </div>
         <div className={cn(' border rounded-sm p-4')}>
-          <div
-            className={cn(
-              'grid',
-              'grid-cols-1 ',
-              'md:grid-cols-2 ',
-              'lg:grid-cols-4 ',
-              'mb-2',
-              ' gap-4',
-            )}
-          >
+          <div className={cn('grid', 'md:grid-cols-2 ', 'lg:grid-cols-4 ', 'mb-2', ' gap-4')}>
             <IGRPCombobox
-              name={`combobox2`}
+              id={`combobox2`}
               label={`Tipo Utente`}
               variant={`single`}
               placeholder={`Select an option...`}
@@ -256,7 +247,7 @@ export default function PageUtentesComponent() {
               options={selectcombobox2Options}
             ></IGRPCombobox>
             <IGRPInputText
-              name={`inputText2`}
+              id={`inputText2`}
               label={`Numero Utente`}
               showIcon={false}
               required={false}
@@ -265,7 +256,7 @@ export default function PageUtentesComponent() {
               value={numeroFlt}
             ></IGRPInputText>
             <IGRPInputText
-              name={`inputText1`}
+              id={`inputText1`}
               label={`Nome`}
               showIcon={false}
               required={false}
@@ -277,7 +268,7 @@ export default function PageUtentesComponent() {
               value={nomeFlt}
             ></IGRPInputText>
             <IGRPInputText
-              name={`inputText3`}
+              id={`inputText3`}
               label={`NIF`}
               showIcon={false}
               required={false}
@@ -289,7 +280,7 @@ export default function PageUtentesComponent() {
               value={nifFlt}
             ></IGRPInputText>
             <IGRPCombobox
-              name={`comboEstado`}
+              id={`comboEstado`}
               label={`Estado`}
               variant={`single`}
               placeholder={`Select an option...`}
@@ -305,6 +296,7 @@ export default function PageUtentesComponent() {
             ></IGRPCombobox>
           </div>
           <IGRPDataTable<Table1, Table1>
+            id={`table1`}
             className={cn()}
             columns={[
               {
@@ -440,7 +432,7 @@ export default function PageUtentesComponent() {
                                     showIcon: true,
                                     showCancel: true,
                                     labelCancel: `Cancel`,
-                                    variantCancel: "default" as const,
+                                    variantCancel: 'default' as const,
                                     showConfirm: true,
                                     labelConfirm: `Confirm`,
                                     variantConfirm: `default` as const,

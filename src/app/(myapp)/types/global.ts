@@ -5,11 +5,13 @@ export interface Utente {
   numero: string;
   nif: string;
   tipoIdentificacao?: string; // Novo campo do backend
+  tipoIdentificacaoDesc?: string; // Novo campo do backend
   identificacao?: string; // Novo campo do backend
   nomeMae?: string;
   nomePai?: string;
   dataNascimento?: string;
   genero?: string; // Campo para gênero
+  generoDesc?: string; // Campo para gênero
   nacionalidade?: string; // Campo para nacionalidade
   estado: string;
   endereco?: string;
